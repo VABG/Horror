@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField] UnityEngine.UI.Text textCenter;
-    [SerializeField] float textCenterFadeTime = 2;
+    [SerializeField] float textCenterFadeTime = .5f;
 
     float timeSinceTextCenterSet = 0;
     // Start is called before the first frame update

@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour, SimpleInteractable
+public class Door : MonoBehaviour, InteractableBasic
 {
     [SerializeField] Transform hinge;
+
     [SerializeField] string openString = "Open Door";
     [SerializeField] string closeString = "Close Door";
     [SerializeField] float openAngle = 90;
@@ -37,9 +38,9 @@ public class Door : MonoBehaviour, SimpleInteractable
     {
         if (moving)
         {
-            Vector3 rot = hinge.transform.rotation.eulerAngles;
             if (open) lerp += Time.deltaTime / openCloseTime;
             else lerp -= Time.deltaTime / openCloseTime;
+
             if (lerp < 0)
             {            
                 moving = false;
@@ -50,7 +51,9 @@ public class Door : MonoBehaviour, SimpleInteractable
                 moving = false;
                 lerp = 1;
             }
-            hinge.transform.rotation = Quaternion.Euler(rot.x, Mathf.SmoothStep(closedAngle, openAngle, lerp), rot.z);
+
+            Vector3 rot = hinge.transform.localRotation.eulerAngles;
+            hinge.transform.localRotation = Quaternion.Euler(rot.x, Mathf.SmoothStep(closedAngle, openAngle, lerp), rot.z);
         }
     }
 }

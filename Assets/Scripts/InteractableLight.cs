@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableLight : MonoBehaviour, SimpleInteractable
+public class InteractableLight : MonoBehaviour, InteractableBasic
 {
     [SerializeField] bool on = true;
 

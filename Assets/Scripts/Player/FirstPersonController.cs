@@ -72,11 +72,10 @@ public class FirstPersonController : MonoBehaviour
 
     void RayCastToScene()
     {
-        Ray r = new Ray();
         Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, rayCastReach);
         if (hit.collider)
         {
-            SimpleInteractable interact = hit.collider.GetComponent<SimpleInteractable>();
+            InteractableBasic interact = hit.collider.GetComponent<InteractableBasic>();
             if (interact != null)
             {
                 if (Input.GetKeyDown(KeyCode.E)) interact.Trigger();
