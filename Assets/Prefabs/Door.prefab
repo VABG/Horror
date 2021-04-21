@@ -112,6 +112,7 @@ MonoBehaviour:
   hinge: {fileID: 2854421172515577410}
   openString: Open Door
   closeString: Close Door
+  lockedString: Locked Door
   openAngle: 90
   closedAngle: 0
   openCloseTime: 1

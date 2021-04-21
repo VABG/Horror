@@ -15,11 +15,11 @@ public class KeyPad : MonoBehaviour
 {
     [SerializeField] string code;
 
-
     [SerializeField] float activeTime = 4.0f;
     [SerializeField] float errorTime = .5f;
 
     [SerializeField] KeyPadStatusLight statusLight;
+    [SerializeField] GameObject progressObject;
     [SerializeField] List<GameObject> buttons;
 
     [SerializeField] UnityEvent correctCodeEvent;
@@ -33,8 +33,7 @@ public class KeyPad : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
+        SetProgress();
     }
 
     // Update is called once per frame
@@ -54,11 +53,20 @@ public class KeyPad : MonoBehaviour
     public void ReceiveInput(int number)
     {
         currentInput += number.ToString();
+        SetProgress();
         if (currentInput.Length == code.Length)
         {
             if (currentInput == code) CorrectInput();
             else BadInput();
         }
+
+    }
+
+    void SetProgress()
+    {
+        if (currentInput.Length == 0) progressObject.transform.localScale = new Vector3(0, 1, 1);
+
+        progressObject.transform.localScale = new Vector3((float)currentInput.Length / (float)code.Length, 1, 1);
     }
 
     public void CorrectInput()
@@ -68,14 +76,15 @@ public class KeyPad : MonoBehaviour
         currentInput = "";
         correctActivated = true;
         timeSinceCorrect = activeTime;
+        SetProgress();
     }
 
     public void BadInput()
     {
         currentInput = "";
         // Make light red        
-        statusLight.SetError(.5f);
-
+        statusLight.SetError(errorTime);
+        SetProgress();
     }
 
 }
