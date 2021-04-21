@@ -8,18 +8,21 @@ public class Door : MonoBehaviour, InteractableBasic
 
     [SerializeField] string openString = "Open Door";
     [SerializeField] string closeString = "Close Door";
+    [SerializeField] string lockedString = "Locked Door";
+
     [SerializeField] float openAngle = 90;
     [SerializeField] float closedAngle = 0;
     [SerializeField] float openCloseTime = 1.0f;
     [SerializeField] bool canInterrupt = false;
-    bool locked = false;
+    bool locked = true;
     float lerp = 0;
     bool moving = false;
     bool open = false;
-    public ColorAndText LookedAtInfo { get => new ColorAndText { text = open ? closeString : openString, color = Color.white }; set => throw new System.NotImplementedException(); }
+    public ColorAndText LookedAtInfo { get => UIInfo(); set => throw new System.NotImplementedException(); }
 
     public void Trigger()
     {
+        if (!open && locked) return;
         if (canInterrupt || !moving)
         {
             open = !open;
@@ -55,5 +58,21 @@ public class Door : MonoBehaviour, InteractableBasic
             Vector3 rot = hinge.transform.localRotation.eulerAngles;
             hinge.transform.localRotation = Quaternion.Euler(rot.x, Mathf.SmoothStep(closedAngle, openAngle, lerp), rot.z);
         }
+    }
+
+    public void LockDoor()
+    {
+        locked = true;
+    }
+
+    public void UnlockDoor()
+    {
+        locked = false;
+    }
+
+    ColorAndText UIInfo()
+    {
+        if (locked && !open) return new ColorAndText { color = Color.red, text = lockedString };
+        else return new ColorAndText { text = open ? closeString : openString, color = Color.white };
     }
 }
