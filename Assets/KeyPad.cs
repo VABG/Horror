@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
+using Unity.UI;
 public enum KeyPadStatus
 {
     Open,
@@ -19,6 +19,7 @@ public class KeyPad : MonoBehaviour
     [SerializeField] float errorTime = .5f;
 
     [SerializeField] KeyPadStatusLight statusLight;
+    [SerializeField] UnityEngine.UI.Text text;
     [SerializeField] GameObject progressObject;
     [SerializeField] List<GameObject> buttons;
 
@@ -67,6 +68,7 @@ public class KeyPad : MonoBehaviour
         if (currentInput.Length == 0) progressObject.transform.localScale = new Vector3(0, 1, 1);
 
         progressObject.transform.localScale = new Vector3((float)currentInput.Length / (float)code.Length, 1, 1);
+        text.text = currentInput;
     }
 
     public void CorrectInput()
