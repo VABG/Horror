@@ -8,6 +8,8 @@ public class FirstPersonController : MonoBehaviour
 {
     [SerializeField] Camera cam;
     [SerializeField] float moveAccelerationMultiplier = 5;
+    [SerializeField] float sprintAccelerationMultiplier = 50;
+
     [Range(.1f, 3.0f)]
     [SerializeField] float rayCastReach = 1.0f;
 
@@ -18,6 +20,7 @@ public class FirstPersonController : MonoBehaviour
 
     Vector3 moveInput;
     Vector3 forward;
+    bool sprinting = false;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +62,7 @@ public class FirstPersonController : MonoBehaviour
 
     void InputKeyboardMovement()
     {
+        sprinting = false;
         // Reset Input
         moveInput = Vector3.zero;
         // Get Input
@@ -66,6 +70,7 @@ public class FirstPersonController : MonoBehaviour
         if (Input.GetKey(KeyCode.S)) moveInput += Vector3.back;
         if (Input.GetKey(KeyCode.D)) moveInput += Vector3.right;
         if (Input.GetKey(KeyCode.A)) moveInput += Vector3.left;
+        if (Input.GetKey(KeyCode.LeftShift)) sprinting = true;
         //  Normalize
         moveInput.Normalize();
     }
@@ -88,7 +93,8 @@ public class FirstPersonController : MonoBehaviour
     private void FixedUpdate()
     {
         // Update movement in fixed update for stability
-        rb.AddForce(forward * moveInput.z * moveAccelerationMultiplier, ForceMode.Acceleration);
-        rb.AddForce(cam.transform.right * moveInput.x * moveAccelerationMultiplier, ForceMode.Acceleration);
+        float multiplier = sprinting ? sprintAccelerationMultiplier : moveAccelerationMultiplier;
+        rb.AddForce(forward * moveInput.z * multiplier, ForceMode.Acceleration);
+        rb.AddForce(cam.transform.right * moveInput.x * multiplier, ForceMode.Acceleration);
     }
 }
