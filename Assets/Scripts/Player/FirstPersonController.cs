@@ -22,6 +22,9 @@ public class FirstPersonController : MonoBehaviour
     Vector3 forward;
     bool sprinting = false;
 
+    bool locked = false;
+    bool active = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,10 +44,16 @@ public class FirstPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InputMouseView();
-        InputKeyboardMovement();
-        RayCastToScene();
-        if (Input.GetKeyDown(KeyCode.F)) flashlight.SetActive(!flashlight.activeSelf);
+        if (active)
+        {
+            if (!locked)
+            {
+                InputMouseView();
+                InputKeyboardMovement();
+            }
+            RayCastToScene();
+            if (Input.GetKeyDown(KeyCode.F)) flashlight.SetActive(!flashlight.activeSelf);
+        }
     }
 
     void InputMouseView()
@@ -97,4 +106,10 @@ public class FirstPersonController : MonoBehaviour
         rb.AddForce(forward * moveInput.z * multiplier, ForceMode.Acceleration);
         rb.AddForce(cam.transform.right * moveInput.x * multiplier, ForceMode.Acceleration);
     }
+
+    public void SetActive(bool active)
+    {
+        this.active = active;
+    }    
+
 }

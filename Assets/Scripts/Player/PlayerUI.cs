@@ -5,9 +5,18 @@ using UnityEngine;
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField] UnityEngine.UI.Text textCenter;
+    [SerializeField] UnityEngine.UI.Image fadeFromImage;
     [SerializeField] float textCenterFadeTime = .5f;
 
+    float fadeFromBlackTime = 0;
+    bool fadeFromBlack = false;
+    bool fadeFromBlackActivatesPlayer = true;
+    float fadeFromBlackTimer = 0;
+    float fadeStartTime = 0;
+
     float timeSinceTextCenterSet = 0;
+
+    float time = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +25,31 @@ public class PlayerUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time += Time.deltaTime;
         FadeTextCenter();
+        FadeFromImage();
+    }
+
+    void FadeFromImage()
+    {
+        if (fadeFromBlack && time >= fadeStartTime)
+        {
+            fadeFromBlackTimer -= Time.deltaTime;
+            if (fadeFromBlackTimer <= 0)
+            {
+                fadeFromBlackTimer = 0;
+                fadeFromBlack = false;
+                if (fadeFromBlackActivatesPlayer) GetComponent<FirstPersonController>().SetActive(true);
+            }
+            fadeFromImage.color = new Color(fadeFromImage.color.r, fadeFromImage.color.g, fadeFromImage.color.b, (float)fadeFromBlackTimer / (float)fadeFromBlackTime);
+        }
+    }
+
+    public void StartFadeFromImage(float time, float timeToStart, bool unlockPlayer = true)
+    {
+        fadeStartTime = timeToStart;
+        fadeFromBlackTime = fadeFromBlackTimer = time;
+        fadeFromBlack = true;
     }
 
     private void FadeTextCenter()
