@@ -18,6 +18,13 @@ public class FirstPersonController : MonoBehaviour
 
     [SerializeField] GameObject flashlight;
 
+    [SerializeField] float holdStrengthMultiplier = 50;
+    [SerializeField] Transform lookAtTransform;
+    [SerializeField] Transform holdTransform;
+
+    Rigidbody heldObject;
+    InteractableBasic heldInteractable;
+
     Vector3 moveInput;
     Vector3 forward;
     bool sprinting = false;
@@ -38,7 +45,7 @@ public class FirstPersonController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        rb.sleepThreshold = 0;
+        rb.sleepThreshold = -1;
     }
 
     // Update is called once per frame
@@ -46,6 +53,7 @@ public class FirstPersonController : MonoBehaviour
     {
         if (active)
         {
+            UpdateCarriedObject();
             if (!locked)
             {
                 InputMouseView();
@@ -53,6 +61,26 @@ public class FirstPersonController : MonoBehaviour
             }
             RayCastToScene();
             if (Input.GetKeyDown(KeyCode.F)) flashlight.SetActive(!flashlight.activeSelf);
+        }
+    }
+
+    void UpdateCarriedObject()
+    {
+        if (heldObject != null)
+        {
+            // Move object towards position with physics
+            Vector3 offset = holdTransform.position - heldObject.position;
+            float dist = offset.magnitude;
+            offset /= dist;
+            if (dist > .5) dist = 1;
+            else
+            {
+                dist *= 2;
+                dist *= dist;
+            }
+            heldObject.AddForce(offset * holdStrengthMultiplier * dist);
+            heldObject.velocity *= dist;
+            heldObject.angularVelocity *= dist;
         }
     }
 
@@ -86,13 +114,44 @@ public class FirstPersonController : MonoBehaviour
 
     void RayCastToScene()
     {
+        bool interactBtnPressed = Input.GetKeyDown(KeyCode.E);
+
+        // Drop what's being held
+        if (interactBtnPressed && (heldObject != null || heldInteractable != null))
+        {
+            heldObject = null;
+            if (heldInteractable != null) heldInteractable.Trigger();
+            heldInteractable = null;
+            locked = false;
+            return;
+        }
+
         Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, rayCastReach);
         if (hit.collider)
         {
             InteractableBasic interact = hit.collider.GetComponent<InteractableBasic>();
             if (interact != null)
             {
-                if (Input.GetKeyDown(KeyCode.E)) interact.Trigger();
+                if (interactBtnPressed)
+                {
+                    interact.Trigger();
+                    PickupMode p = interact.GetPickupMode();
+                    if (p == PickupMode.SmallObject)
+                    {
+                        heldObject = hit.collider.attachedRigidbody;
+                        heldInteractable = interact;
+                    }
+                    else if (p == PickupMode.LookAt)
+                    {
+                        heldInteractable = interact;
+                        locked = true;
+                        hit.collider.transform.position = lookAtTransform.position;
+                        hit.collider.transform.rotation = lookAtTransform.rotation;
+                        moveInput = Vector3.zero;
+                        rb.velocity = Vector3.zero;
+                        rb.angularVelocity = Vector3.zero;
+                    }
+                }
                 ColorAndText c = interact.LookedAtInfo;
                 ui.SetCenterText(c.text, c.color);
             }

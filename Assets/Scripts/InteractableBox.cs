@@ -5,7 +5,16 @@ using UnityEngine;
 public interface InteractableBasic
 {
     abstract void Trigger();
-    public ColorAndText LookedAtInfo { get; set; }
+    public ColorAndText LookedAtInfo { get; }
+    public PickupMode GetPickupMode();
+}
+
+public enum PickupMode
+{
+    None,
+    SmallObject,
+    LargeObject,
+    LookAt
 }
 
 public struct ColorAndText {
@@ -24,7 +33,15 @@ public class InteractableBox : MonoBehaviour, InteractableBasic
     float rotationAngleEnd = 0;
 
     float lerp = 0;
-    ColorAndText InteractableBasic.LookedAtInfo { get => new ColorAndText {color = Color.white, text = lookAtString }; set => Debug.Log("No behaviour defined"); }
+
+    public PickupMode pickupMode;
+
+    ColorAndText InteractableBasic.LookedAtInfo { get => new ColorAndText { color = Color.white, text = lookAtString }; }
+
+    public PickupMode GetPickupMode()
+    {
+        return pickupMode;
+    }
 
     void InteractableBasic.Trigger()
     {

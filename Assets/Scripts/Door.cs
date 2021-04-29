@@ -22,7 +22,8 @@ public class Door : MonoBehaviour, InteractableBasic
 
     public void Trigger()
     {
-        if (!open && locked) return;
+        if (!open && locked && !moving) return;
+
         if (canInterrupt || !moving)
         {
             open = !open;
@@ -60,19 +61,28 @@ public class Door : MonoBehaviour, InteractableBasic
         }
     }
 
-    public void LockDoor()
+    public void DoorLock()
     {
         locked = true;
     }
 
-    public void UnlockDoor()
+    public void DoorUnlock()
     {
         locked = false;
     }
-
     ColorAndText UIInfo()
     {
-        if (locked && !open) return new ColorAndText { color = Color.red, text = lockedString };
+        if (locked && !open && !moving) return new ColorAndText { color = Color.red, text = lockedString };
         else return new ColorAndText { text = open ? closeString : openString, color = Color.white };
+    }
+
+    public void RotateDoor(float angle)
+    {
+        hinge.transform.localRotation = Quaternion.Euler(0, angle, 0);
+    }
+
+    public PickupMode GetPickupMode()
+    {
+        return PickupMode.None;
     }
 }

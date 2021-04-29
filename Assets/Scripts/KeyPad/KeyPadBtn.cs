@@ -21,4 +21,9 @@ public class KeyPadBtn : MonoBehaviour, InteractableBasic
     {
         
     }
+
+    public PickupMode GetPickupMode()
+    {
+        return PickupMode.None;
+    }
 }

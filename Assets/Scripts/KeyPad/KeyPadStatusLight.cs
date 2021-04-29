@@ -9,33 +9,20 @@ public class KeyPadStatusLight : MonoBehaviour
     [SerializeField] Material rightMaterial;
     [SerializeField] Material idleMaterial;
     [SerializeField] Material offMaterial;
+    MeshRenderer mesh;
 
-    bool lightChanged = false;
-    float lightTimer = 0;
+    public float timer = 0;
     bool active = true;
 
     // Start is called before the first frame update
     void Start()
     {
+        mesh = GetComponent<MeshRenderer>();
     }
 
     void SetMaterial(Material m)
     {
-        GetComponent<MeshRenderer>().material = m;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (lightChanged)
-        {
-            lightTimer -= Time.deltaTime;
-            if (lightTimer <= 0)
-            {
-                lightChanged = false;
-                SetIdle();
-            }
-        }
+        mesh.material = m;
     }
 
     public void SetIdle()
@@ -43,7 +30,6 @@ public class KeyPadStatusLight : MonoBehaviour
         if (active)
         {
             SetMaterial(idleMaterial);
-            lightChanged = false;
         }
     }
 
@@ -53,27 +39,22 @@ public class KeyPadStatusLight : MonoBehaviour
         {
             SetMaterial(offMaterial);
             active = false;
-            lightChanged = false;
         }
     }
 
-    public void SetError(float time)
+    public void SetError()
     {
         if (active)
         {
-            lightChanged = true;
             SetMaterial(wrongMaterial);
-            lightTimer = time;
         }
     }
 
-    public void SetCorrect(float time)
+    public void SetCorrect()
     {
         if (active)
         {
             SetMaterial(rightMaterial);
-            lightTimer = time;
-            lightChanged = true;
         }
     }
 }
