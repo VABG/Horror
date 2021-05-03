@@ -24,6 +24,7 @@ public class FirstPersonController : MonoBehaviour
 
     Rigidbody heldObject;
     InteractableBasic heldInteractable;
+    Transform heldTransform;
 
     Vector3 moveInput;
     Vector3 forward;
@@ -44,8 +45,6 @@ public class FirstPersonController : MonoBehaviour
         // Lock mouse
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        rb.sleepThreshold = -1;
     }
 
     // Update is called once per frame
@@ -54,9 +53,10 @@ public class FirstPersonController : MonoBehaviour
         if (active)
         {
             UpdateCarriedObject();
+            InputMouseView();
+
             if (!locked)
             {
-                InputMouseView();
                 InputKeyboardMovement();
             }
             RayCastToScene();
@@ -117,12 +117,18 @@ public class FirstPersonController : MonoBehaviour
         bool interactBtnPressed = Input.GetKeyDown(KeyCode.E);
 
         // Drop what's being held
-        if (interactBtnPressed && (heldObject != null || heldInteractable != null))
+        if (heldObject != null || heldInteractable != null)
         {
-            heldObject = null;
-            if (heldInteractable != null) heldInteractable.Trigger();
-            heldInteractable = null;
-            locked = false;
+            if (interactBtnPressed)
+            {
+                heldObject = null;
+                if (heldInteractable != null) heldInteractable.Trigger();
+                heldInteractable = null;
+                locked = false;
+
+                if (heldTransform != null) heldTransform.SetParent(null);
+                heldTransform = null;
+            }
             return;
         }
 
@@ -136,17 +142,20 @@ public class FirstPersonController : MonoBehaviour
                 {
                     interact.Trigger();
                     PickupMode p = interact.GetPickupMode();
-                    if (p == PickupMode.SmallObject)
+                    if (p == PickupMode.Hold)
                     {
                         heldObject = hit.collider.attachedRigidbody;
                         heldInteractable = interact;
                     }
                     else if (p == PickupMode.LookAt)
                     {
+                        heldTransform = hit.collider.transform;
                         heldInteractable = interact;
+                        hit.collider.transform.SetParent(lookAtTransform);
+                        hit.collider.transform.localPosition = Vector3.zero;
+                        hit.collider.transform.localRotation = Quaternion.identity;
+
                         locked = true;
-                        hit.collider.transform.position = lookAtTransform.position;
-                        hit.collider.transform.rotation = lookAtTransform.rotation;
                         moveInput = Vector3.zero;
                         rb.velocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;

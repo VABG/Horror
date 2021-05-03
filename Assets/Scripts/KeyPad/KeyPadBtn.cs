@@ -6,9 +6,7 @@ public class KeyPadBtn : MonoBehaviour, InteractableBasic
 {
     [SerializeField] KeyPad keyPadParent;
     public int number;
-
     public ColorAndText LookedAtInfo { get => new ColorAndText { text = number.ToString(), color = Color.green }; set => LookedAtInfo = value; }
-
     public void Trigger()
     {
         if (keyPadParent.status == KeyPadStatus.Off) return;
@@ -24,6 +22,6 @@ public class KeyPadBtn : MonoBehaviour, InteractableBasic
 
     public PickupMode GetPickupMode()
     {
-        return PickupMode.None;
+        return PickupMode.Hold;
     }
 }

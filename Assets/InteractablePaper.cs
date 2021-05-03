@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InteractablePaper : MonoBehaviour, InteractableBasic
 {
-    ColorAndText InteractableBasic.LookedAtInfo => new ColorAndText {color = Color.black, text = pickedUp ? "" : "Read Text"};
+    ColorAndText InteractableBasic.LookedAtInfo => new ColorAndText {color = Color.black, text = pickedUp ? "" : "Read"};
     bool pickedUp = false;
     Quaternion rotation;
     Vector3 position;

@@ -6,14 +6,13 @@ public interface InteractableBasic
 {
     abstract void Trigger();
     public ColorAndText LookedAtInfo { get; }
-    public PickupMode GetPickupMode();
+    abstract PickupMode GetPickupMode();
 }
 
 public enum PickupMode
 {
     None,
-    SmallObject,
-    LargeObject,
+    Hold,
     LookAt
 }
 

@@ -24,6 +24,6 @@ public class Flashlight : MonoBehaviour
             targetRotation = rayOrigin.rotation;
         }
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 4.0f);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeedMultiplier);
     }
 }
