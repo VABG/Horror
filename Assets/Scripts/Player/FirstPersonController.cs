@@ -21,9 +21,13 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float holdStrengthMultiplier = 50;
     [SerializeField] Transform lookAtTransform;
     [SerializeField] Transform holdTransform;
+    [SerializeField] Transform hand;
+    [SerializeField] GameObject weapon;
 
+
+    // Held objects
     Rigidbody heldObject;
-    InteractableBasic heldInteractable;
+    IInteractableBasic heldInteractable;
     Transform heldTransform;
 
     Vector3 moveInput;
@@ -52,9 +56,8 @@ public class FirstPersonController : MonoBehaviour
     {
         if (active)
         {
-            UpdateCarriedObject();
             InputMouseView();
-
+            InputDropWeapon();
             if (!locked)
             {
                 InputKeyboardMovement();
@@ -71,16 +74,44 @@ public class FirstPersonController : MonoBehaviour
             // Move object towards position with physics
             Vector3 offset = holdTransform.position - heldObject.position;
             float dist = offset.magnitude;
+
             offset /= dist;
+
+            //Normalized to max of .5
             if (dist > .5) dist = 1;
             else
             {
+                // Normalize .5 and under
                 dist *= 2;
-                dist *= dist;
+                // Flip value
+                dist = 1 - dist;
+                // Bend curve
+                dist = Mathf.Pow(dist, 3);
+                // Flip back (Now has better behaviour!)
+                dist = 1 - dist;
             }
-            heldObject.AddForce(offset * holdStrengthMultiplier * dist);
+            heldObject.AddForce(offset * holdStrengthMultiplier * dist * Time.fixedDeltaTime);
+
+            if (dist >= 1) dist = .95f;
             heldObject.velocity *= dist;
             heldObject.angularVelocity *= dist;
+        }
+    }
+
+    void InputDropWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.G) && weapon != null)
+        {
+            Collider c = weapon.GetComponentInChildren<Collider>();
+            c.attachedRigidbody.isKinematic = false;
+            c.attachedRigidbody.useGravity = true;
+            c.attachedRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            Transform tPos = c.GetComponent<InteractablePhysPickup>().grabTransform;
+            tPos.SetParent(null);
+
+            c.gameObject.layer = 0;
+            weapon.layer = 0;
+            weapon = null;
         }
     }
 
@@ -135,7 +166,7 @@ public class FirstPersonController : MonoBehaviour
         Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, rayCastReach);
         if (hit.collider)
         {
-            InteractableBasic interact = hit.collider.GetComponent<InteractableBasic>();
+            IInteractableBasic interact = hit.collider.GetComponent<IInteractableBasic>();
             if (interact != null)
             {
                 if (interactBtnPressed)
@@ -160,6 +191,20 @@ public class FirstPersonController : MonoBehaviour
                         rb.velocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
                     }
+                    else if (p == PickupMode.Weapon)
+                    {
+                        hit.collider.attachedRigidbody.isKinematic = true;
+                        hit.collider.attachedRigidbody.useGravity = false;
+                        Transform tPos =  hit.collider.GetComponent<InteractablePhysPickup>().grabTransform;
+                        tPos.SetParent(hand);
+                        tPos.position = hand.position;
+                        tPos.rotation = hand.rotation;
+                        weapon = tPos.gameObject;
+                        // Set layer to player
+                        hit.collider.gameObject.layer = 6;
+                        hit.collider.attachedRigidbody.interpolation = RigidbodyInterpolation.None;
+                        weapon.layer = 6;
+                    }
                 }
                 ColorAndText c = interact.LookedAtInfo;
                 ui.SetCenterText(c.text, c.color);
@@ -169,6 +214,8 @@ public class FirstPersonController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        UpdateCarriedObject();
+
         // Update movement in fixed update for stability
         float multiplier = sprinting ? sprintAccelerationMultiplier : moveAccelerationMultiplier;
         rb.AddForce(forward * moveInput.z * multiplier, ForceMode.Acceleration);

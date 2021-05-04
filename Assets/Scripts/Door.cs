@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour, InteractableBasic
+public class Door : MonoBehaviour, IInteractableBasic
 {
     [SerializeField] Transform hinge;
 

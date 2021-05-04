@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractablePhysPickup : MonoBehaviour, InteractableBasic
+public class InteractablePhysPickup : MonoBehaviour, IInteractableBasic, IDamagable
 {
-    public ColorAndText LookedAtInfo => new ColorAndText { text = pickedUp ? "Let go" : "Pick up", color = Color.red };
+    [SerializeField] string pickUpText = "Pick up";
+    [SerializeField] string releaseText = "Let go";
+    [SerializeField] public Transform grabTransform;
+    public ColorAndText LookedAtInfo => new ColorAndText { text = pickedUp ? releaseText: pickUpText, color = Color.red };
     [SerializeField] PickupMode pickupMode;
     bool pickedUp = false;
     public PickupMode GetPickupMode()
@@ -17,15 +20,8 @@ public class InteractablePhysPickup : MonoBehaviour, InteractableBasic
         pickedUp = !pickedUp;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void Damage(float damage, Vector3 position, Vector3 force)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log("Hey!");
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyPadBtn : MonoBehaviour, InteractableBasic
+public class KeyPadBtn : MonoBehaviour, IInteractableBasic
 {
     [SerializeField] KeyPad keyPadParent;
     public int number;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface InteractableBasic
+public interface IInteractableBasic
 {
     abstract void Trigger();
     public ColorAndText LookedAtInfo { get; }
@@ -13,7 +13,8 @@ public enum PickupMode
 {
     None,
     Hold,
-    LookAt
+    LookAt,
+    Weapon
 }
 
 public struct ColorAndText {
@@ -21,7 +22,7 @@ public struct ColorAndText {
     public Color color;
 }
 
-public class InteractableBox : MonoBehaviour, InteractableBasic
+public class InteractableBox : MonoBehaviour, IInteractableBasic, IDamagable
 {
     [SerializeField] string lookAtString;
     [SerializeField] float rotationTime = 1.0f;
@@ -35,14 +36,14 @@ public class InteractableBox : MonoBehaviour, InteractableBasic
 
     public PickupMode pickupMode;
 
-    ColorAndText InteractableBasic.LookedAtInfo { get => new ColorAndText { color = Color.white, text = lookAtString }; }
+    ColorAndText IInteractableBasic.LookedAtInfo { get => new ColorAndText { color = Color.white, text = lookAtString }; }
 
     public PickupMode GetPickupMode()
     {
         return pickupMode;
     }
 
-    void InteractableBasic.Trigger()
+    void IInteractableBasic.Trigger()
     {
         if (interactable)
         {
@@ -66,6 +67,17 @@ public class InteractableBox : MonoBehaviour, InteractableBasic
                 transform.rotation = Quaternion.Euler(new Vector3(rotation.x, rotationAngleEnd, rotation.z));
                 interactable = true;
             }
+        }
+    }
+
+    public void Damage(float damage, Vector3 position, Vector3 force)
+    {
+        if (interactable)
+        {
+            lerp = 0;
+            interactable = false;
+            rotationAngleStart = transform.rotation.eulerAngles.y;
+            rotationAngleEnd = rotationAngleStart + rotationDegrees;
         }
     }
 }

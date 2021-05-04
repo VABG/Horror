@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &458774486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 458774487}
+  m_Layer: 6
+  m_Name: Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &458774487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458774486}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1019, y: -0.067, z: 0.2074}
+  m_LocalScale: {x: 0.7475035, y: 0.7475035, z: 0.7475035}
+  m_Children:
+  - {fileID: 1817053176}
+  m_Father: {fileID: 1195188714648258408}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &830362393
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1691148885}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: InteractLookAtTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,12 +205,94 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1691148884}
   m_LocalRotation: {x: -0.64725906, y: 0.000000029802319, z: 0.00000004470348, w: 0.7622701}
-  m_LocalPosition: {x: 0, y: -0.048399985, z: 0.4035001}
+  m_LocalPosition: {x: 0, y: -0.0347, z: 0.4057}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1195188714648258408}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -80.671, y: 0, z: 0}
+--- !u!1 &1817053175
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1817053176}
+  - component: {fileID: 1817053178}
+  - component: {fileID: 1817053177}
+  m_Layer: 6
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1817053176
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817053175}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0712315, y: 0.0712315, z: 0.0712315}
+  m_Children: []
+  m_Father: {fileID: 458774487}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1817053178
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817053175}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &1817053177
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817053175}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1881490083
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,8 +305,8 @@ GameObject:
   - component: {fileID: 1881490086}
   - component: {fileID: 1881490085}
   - component: {fileID: 207877299}
-  m_Layer: 0
-  m_Name: Spot Light
+  m_Layer: 6
+  m_Name: Flashlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -302,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayOrigin: {fileID: 1195188714648258408}
-  rotationSpeedMultiplier: 5
+  rotationSpeedMultiplier: 4
 --- !u!1 &543932468367452232
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +425,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 875708844002857617}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: InteractHoldTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +440,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543932468367452232}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.07800001, z: 0.629}
+  m_LocalPosition: {x: 0, y: -0, z: 0.629}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1195188714648258408}
@@ -424,7 +537,7 @@ GameObject:
   - component: {fileID: 1195188714648258413}
   - component: {fileID: 1195188714648258414}
   - component: {fileID: 1195188714648258415}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,6 +558,7 @@ Transform:
   - {fileID: 1881490084}
   - {fileID: 1691148885}
   - {fileID: 875708844002857617}
+  - {fileID: 458774487}
   m_Father: {fileID: 1195188715017409554}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -648,7 +762,7 @@ GameObject:
   - component: {fileID: 1195188715017409582}
   - component: {fileID: 1195188715017409583}
   - component: {fileID: 1195188715017409553}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -766,11 +880,13 @@ MonoBehaviour:
   cam: {fileID: 1195188714648258413}
   moveAccelerationMultiplier: 20
   sprintAccelerationMultiplier: 40
-  rayCastReach: 1.23
+  rayCastReach: 1.6
   flashlight: {fileID: 1881490083}
-  holdStrengthMultiplier: 50
+  holdStrengthMultiplier: 10000
   lookAtTransform: {fileID: 1691148885}
-  holdTransform: {fileID: 0}
+  holdTransform: {fileID: 875708844002857617}
+  hand: {fileID: 458774487}
+  weapon: {fileID: 0}
 --- !u!114 &1195188715017409553
 MonoBehaviour:
   m_ObjectHideFlags: 0

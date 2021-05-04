@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractablePaper : MonoBehaviour, InteractableBasic
+public class InteractablePaper : MonoBehaviour, IInteractableBasic
 {
-    ColorAndText InteractableBasic.LookedAtInfo => new ColorAndText {color = Color.black, text = pickedUp ? "" : "Read"};
+    ColorAndText IInteractableBasic.LookedAtInfo => new ColorAndText {color = Color.black, text = pickedUp ? "" : "Read"};
     bool pickedUp = false;
     Quaternion rotation;
     Vector3 position;
-    PickupMode InteractableBasic.GetPickupMode()
+    PickupMode IInteractableBasic.GetPickupMode()
     {
         return PickupMode.LookAt;
     }
@@ -20,7 +20,7 @@ public class InteractablePaper : MonoBehaviour, InteractableBasic
         position = transform.position;
     }
 
-    void InteractableBasic.Trigger()
+    void IInteractableBasic.Trigger()
     {
         pickedUp = !pickedUp;
         if (!pickedUp) ResetPosition();

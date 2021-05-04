@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableLight : MonoBehaviour, InteractableBasic
+
+
+public class InteractableLight : MonoBehaviour, IInteractableBasic, IDamagable
 {
     [SerializeField] bool on = true;
 
@@ -99,5 +101,12 @@ public class InteractableLight : MonoBehaviour, InteractableBasic
     public PickupMode GetPickupMode()
     {
         return PickupMode.None;
+    }
+
+    public void Damage(float damage, Vector3 position, Vector3 force)
+    {
+        changingColor = true;
+        on = false;
+        Debug.Log("LightCollision!");
     }
 }
