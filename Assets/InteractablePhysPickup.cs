@@ -22,6 +22,6 @@ public class InteractablePhysPickup : MonoBehaviour, IInteractableBasic, IDamaga
 
     public void Damage(float damage, Vector3 position, Vector3 force)
     {
-        Debug.Log("Hey!");
+        
     }
 }

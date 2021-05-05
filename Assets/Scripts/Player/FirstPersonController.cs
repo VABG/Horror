@@ -115,12 +115,19 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    float LimitMouseXRotation(float angle)
+    {
+        if (angle > 90 && angle < 260) return 90;
+        if (angle < 270 && angle > 260) return 270;
+        return angle;
+    }
+
     void InputMouseView()
     {
         // Rotate camera 
         Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         Vector3 rotation = cam.transform.rotation.eulerAngles;
-        cam.transform.rotation = Quaternion.Euler(rotation.x - mouseInput.y, rotation.y + mouseInput.x, rotation.z);
+        cam.transform.rotation = Quaternion.Euler(LimitMouseXRotation(rotation.x - mouseInput.y), rotation.y + mouseInput.x, rotation.z);
 
         //Set forward direction after rotating
         forward = cam.transform.forward;
