@@ -12,6 +12,7 @@ public class FirstPersonController : MonoBehaviour
 
     [Range(.1f, 3.0f)]
     [SerializeField] float rayCastReach = 1.0f;
+    [SerializeField] LayerMask rayCastMask;
 
     Rigidbody rb;
     PlayerUI ui;
@@ -21,9 +22,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float holdStrengthMultiplier = 50;
     [SerializeField] Transform lookAtTransform;
     [SerializeField] Transform holdTransform;
-    [SerializeField] Transform hand;
-    [SerializeField] GameObject weapon;
-
+    [SerializeField] WeaponHand weaponHand;
 
     // Held objects
     Rigidbody heldObject;
@@ -57,7 +56,7 @@ public class FirstPersonController : MonoBehaviour
         if (active)
         {
             InputMouseView();
-            InputDropWeapon();
+            InputWeapon();
             if (!locked)
             {
                 InputKeyboardMovement();
@@ -87,7 +86,7 @@ public class FirstPersonController : MonoBehaviour
                 dist = 1 - dist;
                 // Bend curve
                 dist = Mathf.Pow(dist, 3);
-                // Flip back (Now has better behaviour!)
+                // Flip back (Now has more stable behaviour!)
                 dist = 1 - dist;
             }
             heldObject.AddForce(offset * holdStrengthMultiplier * dist * Time.fixedDeltaTime);
@@ -98,27 +97,16 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    void InputDropWeapon()
+    void InputWeapon()
     {
-        if (Input.GetKeyDown(KeyCode.G) && weapon != null)
-        {
-            Collider c = weapon.GetComponentInChildren<Collider>();
-            c.attachedRigidbody.isKinematic = false;
-            c.attachedRigidbody.useGravity = true;
-            c.attachedRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-            Transform tPos = c.GetComponent<InteractablePhysPickup>().grabTransform;
-            tPos.SetParent(null);
-
-            c.gameObject.layer = 0;
-            weapon.layer = 0;
-            weapon = null;
-        }
+        if (Input.GetKeyDown(KeyCode.G)) weaponHand.DropWeapon();
+        if (Input.GetMouseButtonDown(0)) weaponHand.Attack();
     }
 
     float LimitMouseXRotation(float angle)
     {
-        if (angle > 90 && angle < 260) return 90;
-        if (angle < 270 && angle > 260) return 270;
+        if (angle > 89 && angle < 260) return 89;
+        if (angle < 269 && angle > 260) return 269;
         return angle;
     }
 
@@ -128,7 +116,6 @@ public class FirstPersonController : MonoBehaviour
         Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         Vector3 rotation = cam.transform.rotation.eulerAngles;
         cam.transform.rotation = Quaternion.Euler(LimitMouseXRotation(rotation.x - mouseInput.y), rotation.y + mouseInput.x, rotation.z);
-
         //Set forward direction after rotating
         forward = cam.transform.forward;
         forward = new Vector3(forward.x, 0, forward.z);
@@ -159,18 +146,12 @@ public class FirstPersonController : MonoBehaviour
         {
             if (interactBtnPressed)
             {
-                heldObject = null;
-                if (heldInteractable != null) heldInteractable.Trigger();
-                heldInteractable = null;
-                locked = false;
-
-                if (heldTransform != null) heldTransform.SetParent(null);
-                heldTransform = null;
+                DropHeld();
             }
             return;
         }
 
-        Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, rayCastReach);
+        Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, rayCastReach, rayCastMask);
         if (hit.collider)
         {
             IInteractableBasic interact = hit.collider.GetComponent<IInteractableBasic>();
@@ -180,37 +161,18 @@ public class FirstPersonController : MonoBehaviour
                 {
                     interact.Trigger();
                     PickupMode p = interact.GetPickupMode();
-                    if (p == PickupMode.Hold)
+                    switch (p)
                     {
-                        heldObject = hit.collider.attachedRigidbody;
-                        heldInteractable = interact;
-                    }
-                    else if (p == PickupMode.LookAt)
-                    {
-                        heldTransform = hit.collider.transform;
-                        heldInteractable = interact;
-                        hit.collider.transform.SetParent(lookAtTransform);
-                        hit.collider.transform.localPosition = Vector3.zero;
-                        hit.collider.transform.localRotation = Quaternion.identity;
-
-                        locked = true;
-                        moveInput = Vector3.zero;
-                        rb.velocity = Vector3.zero;
-                        rb.angularVelocity = Vector3.zero;
-                    }
-                    else if (p == PickupMode.Weapon)
-                    {
-                        hit.collider.attachedRigidbody.isKinematic = true;
-                        hit.collider.attachedRigidbody.useGravity = false;
-                        Transform tPos =  hit.collider.GetComponent<InteractablePhysPickup>().grabTransform;
-                        tPos.SetParent(hand);
-                        tPos.position = hand.position;
-                        tPos.rotation = hand.rotation;
-                        weapon = tPos.gameObject;
-                        // Set layer to player
-                        hit.collider.gameObject.layer = 6;
-                        hit.collider.attachedRigidbody.interpolation = RigidbodyInterpolation.None;
-                        weapon.layer = 6;
+                        case PickupMode.Hold:
+                            heldObject = hit.collider.attachedRigidbody;
+                            heldInteractable = interact;
+                            break;
+                        case PickupMode.LookAt:
+                            PickUpLookAt(hit, interact);
+                            break;
+                        case PickupMode.Weapon:
+                            weaponHand.SetWeapon(hit.collider);
+                            break;
                     }
                 }
                 ColorAndText c = interact.LookedAtInfo;
@@ -218,6 +180,37 @@ public class FirstPersonController : MonoBehaviour
             }
         }
     }
+
+    private void DropHeld()
+    {
+        if (heldInteractable != null) heldInteractable.Trigger();
+        
+        heldObject = null;
+        heldInteractable = null;
+        locked = false;
+
+        if (heldTransform != null)
+        {
+            heldTransform.SetParent(null);
+            heldTransform.gameObject.layer = 0;
+            heldTransform = null;
+        }
+    }
+
+    private void PickUpLookAt(RaycastHit hit, IInteractableBasic interact)
+    {
+        heldTransform = hit.collider.transform;
+        heldInteractable = interact;
+        hit.collider.transform.SetParent(lookAtTransform);
+        hit.collider.transform.localPosition = Vector3.zero;
+        hit.collider.transform.localRotation = Quaternion.identity;
+        hit.collider.gameObject.layer = 6;
+        locked = true;
+        moveInput = Vector3.zero;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
 
     private void FixedUpdate()
     {
