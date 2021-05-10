@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(HandAnimation))]
 public class WeaponHand : MonoBehaviour
 {    
     Animator animator;
