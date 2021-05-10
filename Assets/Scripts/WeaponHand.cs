@@ -94,12 +94,12 @@ public class WeaponHand : MonoBehaviour
         if (m != null) m.SetIsTrigger(false);
     }
 
-    public void Update()
+    private void FixedUpdate()
     {
-        approxVel = (transform.position - lastPos)/Time.deltaTime;
+        approxVel = (transform.position - lastPos) / Time.fixedDeltaTime;
         lastPos = transform.position;
 
-        approxAngVel = (transform.rotation.eulerAngles - lastRot) / Time.deltaTime;
+        approxAngVel = (transform.rotation.eulerAngles - lastRot) / Time.fixedDeltaTime;
         lastRot = transform.rotation.eulerAngles;
     }
 }
