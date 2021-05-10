@@ -68,7 +68,7 @@ public class WeaponHand : MonoBehaviour
 
         //Subscribe to StopAttack event
         MeleeDamage dmg = collider.GetComponentInParent<MeleeDamage>();
-        dmg.onHitEvent += DropWeapon;
+        dmg.onHitEvent += StopAttack;
     }
 
     public void Attack()
@@ -78,14 +78,14 @@ public class WeaponHand : MonoBehaviour
 
     public void StopAttack()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("melee_attack")) animator.SetTrigger("HitOther");
+        animator.SetTrigger("HitOther");
+        DeactivateDmg();
     }
 
     public void ActivateDmg()
     {
         MeleeDamage m = GetComponentInChildren<MeleeDamage>();
         if (m != null) m.SetIsTrigger(true);
-
     }
 
     public void DeactivateDmg()
