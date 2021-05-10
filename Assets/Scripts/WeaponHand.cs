@@ -25,7 +25,6 @@ public class WeaponHand : MonoBehaviour
 
     public void DropWeapon()
     {
-
         if (!HasWeapon()) return;
         Collider c = weapon.GetComponentInChildren<Collider>();
 
@@ -47,7 +46,6 @@ public class WeaponHand : MonoBehaviour
         //Set velocity
         c.attachedRigidbody.velocity = approxVel;
         c.attachedRigidbody.angularVelocity = approxAngVel;
-
     }
 
     public void SetWeapon(Collider collider)
