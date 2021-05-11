@@ -105,8 +105,8 @@ public class FirstPersonController : MonoBehaviour
 
     float LimitMouseXRotation(float angle)
     {
-        if (angle > 89 && angle < 260) return 89;
-        if (angle < 269 && angle > 260) return 269;
+        if (angle > 89 && angle < 180) return 89;
+        if (angle < 271 && angle > 180) return 271;
         return angle;
     }
 

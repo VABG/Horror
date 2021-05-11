@@ -32,6 +32,7 @@ public class WeaponHand : MonoBehaviour
         MeleeDamage dmg = c.GetComponentInParent<MeleeDamage>();
         dmg.onHitEvent -= StopAttack;
 
+        // Hey!
         c.attachedRigidbody.isKinematic = false;
         c.attachedRigidbody.useGravity = true;
         c.attachedRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
@@ -50,15 +51,28 @@ public class WeaponHand : MonoBehaviour
 
     public void SetWeapon(Collider collider)
     {
+        // If has weapon, then drop first
+        if (HasWeapon()) DropWeapon();
+
+        // Setup phsysics
         collider.attachedRigidbody.isKinematic = true;
         collider.attachedRigidbody.useGravity = false;
+
+        // Get Components
         InteractablePhysPickup iPP = collider.GetComponent<InteractablePhysPickup>();
         Transform tPos = iPP.grabTransform;
+
+        // Disable pickupable script
         iPP.enabled = false;
+
+        // Set parent and move to origin
         tPos.SetParent(transform);
         tPos.position = transform.position;
         tPos.rotation = transform.rotation;
+
+        //Set game object
         weapon = tPos.gameObject;
+
         // Set layer to player
         collider.gameObject.layer = 6;
         collider.attachedRigidbody.interpolation = RigidbodyInterpolation.None;

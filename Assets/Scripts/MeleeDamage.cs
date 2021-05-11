@@ -19,7 +19,6 @@ public class MeleeDamage : MonoBehaviour
         colliders = GetComponentsInChildren<Collider>();
     }
 
-
     public void SetIsTrigger(bool isTrigger)
     {
         foreach(Collider c in colliders)
@@ -30,7 +29,7 @@ public class MeleeDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
+        HitNonDamagable();
         IDamagable dmg = other.gameObject.GetComponentInParent<IDamagable>();
         if (dmg == null) other.gameObject.GetComponentInChildren<IDamagable>();
         if (dmg == null) other.gameObject.GetComponent<IDamagable>();
@@ -40,12 +39,11 @@ public class MeleeDamage : MonoBehaviour
         }
         else
         {
-            HitNonDamagable();
+            onHitEvent?.Invoke();
         }
     }
 
     public void HitNonDamagable()
     {
-        onHitEvent?.Invoke();
     }
 }
