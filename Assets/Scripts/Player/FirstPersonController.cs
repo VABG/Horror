@@ -70,6 +70,11 @@ public class FirstPersonController : MonoBehaviour
     {
         if (heldObject != null)
         {
+            if ((heldObject.transform.position-transform.position).magnitude > rayCastReach + .1f)
+            {
+                DropHeld();
+                return;
+            }
             // Move object towards position with physics
             Vector3 offset = holdTransform.position - heldObject.position;
             float dist = offset.magnitude;

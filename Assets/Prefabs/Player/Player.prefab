@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 458774487}
   - component: {fileID: 1921962463}
-  - component: {fileID: 1921962464}
+  - component: {fileID: 1921962465}
   m_Layer: 6
   m_Name: Hand
   m_TagString: Untagged
@@ -26,125 +26,44 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 458774486}
   m_LocalRotation: {x: -0.60982597, y: -0.000000020489097, z: -0.000000027939677, w: 0.7925354}
-  m_LocalPosition: {x: 0.12859999, y: -0.19999999, z: 0.26279995}
+  m_LocalPosition: {x: 0.131, y: -0.066, z: 0.157}
   m_LocalScale: {x: 0.7475035, y: 0.7475035, z: 0.74750346}
   m_Children:
   - {fileID: 1817053176}
   m_Father: {fileID: 1195188714648258408}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -75.154, y: 0, z: 0}
---- !u!54 &1921962463
-Rigidbody:
+--- !u!95 &1921962463
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 458774486}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
---- !u!153 &1921962464
-ConfigurableJoint:
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d742f889390349b429eefaaa7c15b780, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1921962465
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 458774486}
-  m_ConnectedBody: {fileID: 0}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 1, y: 0, z: 0}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  serializedVersion: 2
-  m_SecondaryAxis: {x: 0, y: 1, z: 0}
-  m_XMotion: 0
-  m_YMotion: 0
-  m_ZMotion: 0
-  m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 0
-  m_LinearLimitSpring:
-    spring: 0
-    damper: 0
-  m_LinearLimit:
-    limit: 0
-    bounciness: 0
-    contactDistance: 0
-  m_AngularXLimitSpring:
-    spring: 20
-    damper: 5
-  m_LowAngularXLimit:
-    limit: -87.78068
-    bounciness: 0
-    contactDistance: 0
-  m_HighAngularXLimit:
-    limit: 90.03367
-    bounciness: 0
-    contactDistance: 0
-  m_AngularYZLimitSpring:
-    spring: 20
-    damper: 5
-  m_AngularYLimit:
-    limit: 84.66289
-    bounciness: 0
-    contactDistance: 0
-  m_AngularZLimit:
-    limit: 0
-    bounciness: 0
-    contactDistance: 0
-  m_TargetPosition: {x: 0, y: 0, z: 0}
-  m_TargetVelocity: {x: 0, y: 0, z: 0}
-  m_XDrive:
-    serializedVersion: 3
-    positionSpring: 0
-    positionDamper: 0
-    maximumForce: 3.4028233e+38
-  m_YDrive:
-    serializedVersion: 3
-    positionSpring: 0
-    positionDamper: 0
-    maximumForce: 3.4028233e+38
-  m_ZDrive:
-    serializedVersion: 3
-    positionSpring: 0
-    positionDamper: 0
-    maximumForce: 3.4028233e+38
-  m_TargetRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_TargetAngularVelocity: {x: 0, y: 0, z: 0}
-  m_RotationDriveMode: 0
-  m_AngularXDrive:
-    serializedVersion: 3
-    positionSpring: 100
-    positionDamper: 1
-    maximumForce: 3.4028233e+38
-  m_AngularYZDrive:
-    serializedVersion: 3
-    positionSpring: 100
-    positionDamper: 1
-    maximumForce: 3.4028233e+38
-  m_SlerpDrive:
-    serializedVersion: 3
-    positionSpring: 0
-    positionDamper: 0
-    maximumForce: 3.4028233e+38
-  m_ProjectionMode: 1
-  m_ProjectionDistance: 0.1
-  m_ProjectionAngle: 180
-  m_ConfiguredInWorldSpace: 0
-  m_SwapBodies: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 0
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786dd14f612965847aef02358e6281ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &830362393
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,7 +271,7 @@ Transform:
   m_GameObject: {fileID: 1817053175}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0712315, y: 0.0712315, z: 0.0712315}
+  m_LocalScale: {x: 0.10072847, y: 0.10072847, z: 0.10072847}
   m_Children: []
   m_Father: {fileID: 458774487}
   m_RootOrder: 0
@@ -433,13 +352,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1881490083}
-  m_LocalRotation: {x: -0.03312372, y: -0.047420256, z: -0.016562672, w: 0.9981883}
-  m_LocalPosition: {x: 0.283, y: -0.316, z: -0.003}
+  m_LocalRotation: {x: -0.034532893, y: 0.046401143, z: -0.01338565, w: 0.99823606}
+  m_LocalPosition: {x: -0.19, y: -0.302, z: 0.041}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1195188714648258408}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -3.882, y: -5.381, z: -1.719}
+  m_LocalEulerAnglesHint: {x: -3.882, y: 5.381, z: -1.719}
 --- !u!108 &1881490086
 Light:
   m_ObjectHideFlags: 0
@@ -774,7 +693,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &1195188714781261336
 GameObject:
@@ -980,7 +899,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &1195188715017409582
 CapsuleCollider:
@@ -1012,12 +931,14 @@ MonoBehaviour:
   moveAccelerationMultiplier: 20
   sprintAccelerationMultiplier: 40
   rayCastReach: 1.6
+  rayCastMask:
+    serializedVersion: 2
+    m_Bits: 55
   flashlight: {fileID: 1881490083}
   holdStrengthMultiplier: 10000
   lookAtTransform: {fileID: 1691148885}
   holdTransform: {fileID: 875708844002857617}
-  hand: {fileID: 458774487}
-  weapon: {fileID: 0}
+  weaponHand: {fileID: 1921962465}
 --- !u!114 &1195188715017409553
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour, IDamagable
 {
     UnityEngine.AI.NavMeshAgent navMeshAgent;
     float pathFindTimer = .5f;
@@ -10,6 +10,13 @@ public class EnemyAI : MonoBehaviour
     float health = 100;
 
     [SerializeField] float pathFindUpdateTime = .5f;
+
+    public void Damage(float damage, Vector3 position, Vector3 force)
+    {
+        health -= damage;
+        if (health <= 0) Die();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,5 +35,10 @@ public class EnemyAI : MonoBehaviour
                 navMeshAgent.SetDestination(target.transform.position);
             }
         }
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
     }
 }
