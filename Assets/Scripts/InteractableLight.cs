@@ -106,7 +106,7 @@ public class InteractableLight : MonoBehaviour, IInteractableBasic, IDamagable
     public void Damage(float damage, Vector3 position, Vector3 force)
     {
         changingColor = true;
+        lerp = 0;
         on = false;
-        Debug.Log("LightCollision!");
     }
 }

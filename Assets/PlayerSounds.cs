@@ -6,7 +6,7 @@ public class PlayerSounds : MonoBehaviour
 {
     [SerializeField] AudioClip[] footsteps;
     AudioSource source;
-    float footstepTimer = 0;
+    float footstepTimer = .5f;
     // Start is called before the first frame update
     void Start()
     {

@@ -37,6 +37,9 @@ public class FirstPersonController : MonoBehaviour
     bool locked = false;
     bool active = false;
 
+    bool wantsToAttack = false;
+    bool wantsToSwing = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +59,7 @@ public class FirstPersonController : MonoBehaviour
         {
             InputMouseView();
             InputWeapon();
+            WeaponUpdate();
             sounds.UpdateFootstep(rb.velocity.magnitude / 10);
             if (!locked)
             {
@@ -105,9 +109,28 @@ public class FirstPersonController : MonoBehaviour
     void InputWeapon()
     {
         if (Input.GetKeyDown(KeyCode.G)) weaponHand.DropWeapon();
+
         if (Input.GetMouseButtonDown(0))
         {
-            weaponHand.Attack();
+            wantsToSwing = true;
+            wantsToAttack = false;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            wantsToAttack = true;
+            wantsToSwing = false;
+        }
+    }
+
+    void WeaponUpdate()
+    {
+        if (wantsToSwing && weaponHand.StartAttack())
+        {
+            wantsToSwing = false;
+        }
+        if (wantsToAttack && weaponHand.Attack())
+        {
+            wantsToAttack = false;
         }
     }
 

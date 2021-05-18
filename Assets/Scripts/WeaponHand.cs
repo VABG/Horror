@@ -12,6 +12,10 @@ public class WeaponHand : MonoBehaviour
     Vector3 approxAngVel;
     AudioSource audio;
     [SerializeField] AudioClip swingAudio;
+    float swingTimer = 0;
+    bool isPoweringUp = false;
+    bool hasAttacked = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +23,11 @@ public class WeaponHand : MonoBehaviour
         animator = GetComponent<Animator>();
         lastPos = transform.position;
         lastRot = transform.rotation.eulerAngles;
+    }
+
+    private void Update()
+    {
+        if (isPoweringUp) swingTimer += Time.deltaTime;
     }
 
     public bool HasWeapon()
@@ -86,14 +95,36 @@ public class WeaponHand : MonoBehaviour
         dmg.onHitEvent += StopAttack;
     }
 
-    public void Attack()
+    public bool StartAttack()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("melee_idle"))
+        if (CanStartAttack())
         {
-            animator.SetTrigger("Attack");
-            audio.pitch = .6f;
-            audio.PlayOneShot(swingAudio);
+            animator.SetTrigger("Windup");
+            isPoweringUp = true;
+            swingTimer = 0;
+            return true;
         }
+        return false;
+    }
+
+    public bool CanStartAttack()
+    {
+        return !isPoweringUp && animator.GetCurrentAnimatorStateInfo(0).IsName("melee_idle");
+    }
+
+    public bool Attack()
+    {
+        if (!CanAttack()) return false;
+        animator.SetTrigger("Attack");
+        isPoweringUp = false;
+        audio.pitch = .6f;
+        audio.PlayOneShot(swingAudio);
+        return true;
+    }
+
+    public bool CanAttack()
+    {
+        return isPoweringUp && animator.GetCurrentAnimatorStateInfo(0).IsName("melee_windup");
     }
 
     public void StopAttack()
