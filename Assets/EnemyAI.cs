@@ -7,7 +7,7 @@ public class EnemyAI : MonoBehaviour, IDamagable
     UnityEngine.AI.NavMeshAgent navMeshAgent;
     float pathFindTimer = .5f;
     [SerializeField] GameObject target;
-    float health = 100;
+    [SerializeField]float health = 30;
 
     [SerializeField] float pathFindUpdateTime = .5f;
 

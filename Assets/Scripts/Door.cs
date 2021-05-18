@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IInteractableBasic
 {
+    [SerializeField] AudioClip audioOpen;
+    [SerializeField] AudioClip audioClose;
+    [SerializeField] AudioClip audioChange;
+    [SerializeField] AudioClip audioLocked;
+
+    AudioSource audioSource;
+
     [SerializeField] Transform hinge;
 
     [SerializeField] string openString = "Open Door";
@@ -26,6 +33,15 @@ public class Door : MonoBehaviour, IInteractableBasic
 
         if (canInterrupt || !moving)
         {
+            if (lerp > 0)
+            {
+                audioSource.pitch = 1 + Random.value * .1f + .5f;
+                audioSource.PlayOneShot(audioChange);
+            }
+            else if (lerp == 0)
+            {
+                audioSource.PlayOneShot(audioOpen);
+            }
             open = !open;
             moving = true;
         }
@@ -34,6 +50,7 @@ public class Door : MonoBehaviour, IInteractableBasic
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         if (openCloseTime <= 0) openCloseTime = .1f;
     }
 
@@ -49,6 +66,7 @@ public class Door : MonoBehaviour, IInteractableBasic
             {            
                 moving = false;
                 lerp = 0;
+                audioSource.PlayOneShot(audioClose);
             }
             else if (lerp >= 1)
             {

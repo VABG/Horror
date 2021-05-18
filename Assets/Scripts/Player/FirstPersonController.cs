@@ -16,8 +16,9 @@ public class FirstPersonController : MonoBehaviour
 
     Rigidbody rb;
     PlayerUI ui;
+    PlayerSounds sounds;
 
-    [SerializeField] GameObject flashlight;
+    [SerializeField] Flashlight flashlight;
 
     [SerializeField] float holdStrengthMultiplier = 50;
     [SerializeField] Transform lookAtTransform;
@@ -41,9 +42,7 @@ public class FirstPersonController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         ui = GetComponent<PlayerUI>();
-
-        //Deactivate flashlight
-        flashlight.SetActive(false);
+        sounds = GetComponent<PlayerSounds>();
 
         // Lock mouse
         Cursor.lockState = CursorLockMode.Locked;
@@ -57,12 +56,13 @@ public class FirstPersonController : MonoBehaviour
         {
             InputMouseView();
             InputWeapon();
+            sounds.UpdateFootstep(rb.velocity.magnitude / 10);
             if (!locked)
             {
                 InputKeyboardMovement();
             }
             RayCastToScene();
-            if (Input.GetKeyDown(KeyCode.F)) flashlight.SetActive(!flashlight.activeSelf);
+            if (Input.GetKeyDown(KeyCode.F)) flashlight.InvertState();
         }
     }
 
@@ -105,7 +105,10 @@ public class FirstPersonController : MonoBehaviour
     void InputWeapon()
     {
         if (Input.GetKeyDown(KeyCode.G)) weaponHand.DropWeapon();
-        if (Input.GetMouseButtonDown(0)) weaponHand.Attack();
+        if (Input.GetMouseButtonDown(0))
+        {
+            weaponHand.Attack();
+        }
     }
 
     float LimitMouseXRotation(float angle)

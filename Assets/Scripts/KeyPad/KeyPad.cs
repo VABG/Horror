@@ -13,6 +13,9 @@ public enum KeyPadStatus
 
 public class KeyPad : MonoBehaviour
 {
+    [SerializeField] AudioClip audioButton;
+    [SerializeField] AudioClip audioFail;
+    [SerializeField] AudioClip audioUnlock;
     [SerializeField] string code;
 
     [SerializeField] float activeTime = 4.0f;
@@ -29,10 +32,12 @@ public class KeyPad : MonoBehaviour
 
     float timeSinceChange = 0;
     bool activated = false;
+    AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         SetProgress();
     }
 
@@ -58,6 +63,7 @@ public class KeyPad : MonoBehaviour
     public void ReceiveInput(int number)
     {
         if (activated) return;
+        audioSource.PlayOneShot(audioButton, .5f);
         currentInput += number.ToString();
         SetProgress();
         if (currentInput.Length == code.Length)
@@ -83,6 +89,7 @@ public class KeyPad : MonoBehaviour
 
     void CorrectInput()
     {
+        audioSource.PlayOneShot(audioUnlock, .3f);
         correctCodeEvent.Invoke();
         statusLight.SetCorrect();
         currentInput = "";
@@ -93,6 +100,7 @@ public class KeyPad : MonoBehaviour
 
     void BadInput()
     {
+        audioSource.PlayOneShot(audioFail, .7f);
         // Make light red        
         statusLight.SetError();
         currentInput = "- - - -";

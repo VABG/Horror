@@ -10,9 +10,12 @@ public class WeaponHand : MonoBehaviour
     Vector3 lastPos;
     Vector3 lastRot;
     Vector3 approxAngVel;
+    AudioSource audio;
+    [SerializeField] AudioClip swingAudio;
     // Start is called before the first frame update
     void Start()
     {
+        audio = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         lastPos = transform.position;
         lastRot = transform.rotation.eulerAngles;
@@ -85,7 +88,12 @@ public class WeaponHand : MonoBehaviour
 
     public void Attack()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("melee_idle")) animator.SetTrigger("Attack");
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("melee_idle"))
+        {
+            animator.SetTrigger("Attack");
+            audio.pitch = .6f;
+            audio.PlayOneShot(swingAudio);
+        }
     }
 
     public void StopAttack()
