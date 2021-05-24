@@ -3,31 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponHand : MonoBehaviour
-{    
+{
+    [SerializeField] float windUpTimeMin = 1.0f;
+    [SerializeField] float windUpTimeMax = 2.0f;
+    [SerializeField] float windUpTimeMult = 1.0f;
+    Vector3 localWeaponRotation;
     Animator animator;
-    GameObject weapon;
+    MeleeDamage weapon;
     Vector3 approxVel;
     Vector3 lastPos;
     Vector3 lastRot;
     Vector3 approxAngVel;
     AudioSource audio;
     [SerializeField] AudioClip swingAudio;
-    float swingTimer = 0;
+    float windUpTimer = 0;
     bool isPoweringUp = false;
-    bool hasAttacked = false;
+
+    bool wantsToWindUp = false;
+    bool wantsToAttack = false;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         audio = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         lastPos = transform.position;
         lastRot = transform.rotation.eulerAngles;
     }
 
+    public void WantToWindUp()
+    {
+        wantsToWindUp = true;
+        wantsToAttack = false;
+    }
+
+    public void WantToAttack()
+    {
+        wantsToAttack = true;
+        wantsToWindUp = false;
+    }
+
     private void Update()
     {
-        if (isPoweringUp) swingTimer += Time.deltaTime;
+        if (isPoweringUp && windUpTimer < windUpTimeMax + windUpTimeMin) windUpTimer += Time.deltaTime * windUpTimeMult;
+        if (HasWeapon())transform.localRotation = Quaternion.Euler(localWeaponRotation + new Vector3(Random.value * windUpTimer, Random.value * windUpTimer, Random.value * windUpTimer)*90);
+
+        if (wantsToWindUp) StartAttack();
+        if (wantsToAttack) Attack();
     }
 
     public bool HasWeapon()
@@ -54,7 +76,7 @@ public class WeaponHand : MonoBehaviour
         tPos.SetParent(null);
         tPos.GetComponent<MeleeDamage>().SetIsTrigger(false);
         c.gameObject.layer = 0;
-        weapon.layer = 0;
+        weapon.gameObject.layer = 0;
         weapon = null;        
         //Set velocity
         c.attachedRigidbody.velocity = approxVel;
@@ -83,46 +105,50 @@ public class WeaponHand : MonoBehaviour
         tPos.rotation = transform.rotation;
 
         //Set game object
-        weapon = tPos.gameObject;
+        weapon = tPos.GetComponent<MeleeDamage>();
 
         // Set layer to player
         collider.gameObject.layer = 6;
         collider.attachedRigidbody.interpolation = RigidbodyInterpolation.None;
-        weapon.layer = 6;
+        weapon.gameObject.layer = 6;
+        localWeaponRotation = weapon.transform.localRotation.eulerAngles;
 
         //Subscribe to StopAttack event
         MeleeDamage dmg = collider.GetComponentInParent<MeleeDamage>();
         dmg.onHitEvent += StopAttack;
     }
 
-    public bool StartAttack()
+    bool StartAttack()
     {
         if (CanStartAttack())
         {
             animator.SetTrigger("Windup");
             isPoweringUp = true;
-            swingTimer = 0;
+            wantsToWindUp = false;
+            windUpTimer = windUpTimeMin;
             return true;
         }
         return false;
     }
 
-    public bool CanStartAttack()
+    bool CanStartAttack()
     {
         return !isPoweringUp && animator.GetCurrentAnimatorStateInfo(0).IsName("melee_idle");
     }
 
-    public bool Attack()
+    bool Attack()
     {
         if (!CanAttack()) return false;
+        wantsToAttack = false;
         animator.SetTrigger("Attack");
+        if (HasWeapon()) weapon.SetDmgMult(Mathf.Clamp(windUpTimer, windUpTimeMin, windUpTimeMax + windUpTimeMin));
         isPoweringUp = false;
         audio.pitch = .6f;
         audio.PlayOneShot(swingAudio);
         return true;
     }
 
-    public bool CanAttack()
+    bool CanAttack()
     {
         return isPoweringUp && animator.GetCurrentAnimatorStateInfo(0).IsName("melee_windup");
     }

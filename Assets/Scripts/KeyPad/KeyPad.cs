@@ -54,6 +54,7 @@ public class KeyPad : MonoBehaviour
                 activated = false;
                 currentInput = "";
                 inactiveEvent.Invoke();
+                audioSource.PlayOneShot(audioUnlock, .5f);
                 SetProgress();
                 statusLight.SetIdle();
             }

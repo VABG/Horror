@@ -52,6 +52,7 @@ public class MeleeDamage : MonoBehaviour
         }
 
         float dmgMult = (3.0f - hitColliders.Count) / 3.0f;
+        dmgMult *= damageMultiplier;
 
         hitColliders.Add(other);
 

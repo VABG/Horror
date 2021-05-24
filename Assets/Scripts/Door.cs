@@ -29,7 +29,12 @@ public class Door : MonoBehaviour, IInteractableBasic
 
     public void Trigger()
     {
-        if (!open && locked && !moving) return;
+        if (!open && locked && !moving)
+        {
+            audioSource.PlayOneShot(audioLocked);
+            return;
+        }
+        
 
         if (canInterrupt || !moving)
         {
