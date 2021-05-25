@@ -14,11 +14,18 @@ public class EnemyAI : MonoBehaviour, IDamagable
     AIState state = AIState.Idle;
     UnityEngine.AI.NavMeshAgent navMeshAgent;
     float pathFindTimer = .5f;
+    [SerializeField] GameObject head;
     [SerializeField] GameObject target;
     [SerializeField]float health = 30;
 
     [SerializeField] float pathFindUpdateTime = .5f;
     [SerializeField]GameObject pathParent;
+    [SerializeField] LayerMask viewMask;
+    [SerializeField] float viewAngle = 25;
+    [SerializeField] float losePlayerTime = 3.0f;
+    [SerializeField] FootstepSounds sounds;
+    float sawLastTimer = 0;
+
     Transform[] path;
     int currentPathPoint = 0;
     public void Damage(float damage, Vector3 position, Vector3 force)
@@ -41,6 +48,9 @@ public class EnemyAI : MonoBehaviour, IDamagable
     // Update is called once per frame
     void Update()
     {
+        UpdateLooking();
+
+        sounds.UpdateFootstep(navMeshAgent.velocity.magnitude / 10);
         switch (state){
             case AIState.Idle:                
                 break;
@@ -53,7 +63,32 @@ public class EnemyAI : MonoBehaviour, IDamagable
         }
     }
 
-    public void UpdateAttacking()
+    private void UpdateLooking()
+    {
+
+        sawLastTimer += Time.deltaTime;
+        Vector3 direction = target.transform.position - head.transform.position;
+        float angularDifference = Vector3.Angle(direction.normalized, head.transform.forward);
+        if (sawLastTimer >= losePlayerTime && state == AIState.Attacking)
+        {
+            SetPathState();
+        }
+
+        if (angularDifference > viewAngle) return;
+        
+        if (Physics.Raycast(new Ray(head.transform.position, direction.normalized), out RaycastHit h, 20, viewMask))
+        {
+            Debug.DrawRay(head.transform.position, direction.normalized * h.distance);
+            FirstPersonController fp = h.transform.GetComponent<FirstPersonController>();
+            if (fp != null)
+            {
+                sawLastTimer = 0;
+                state = AIState.Attacking;
+            }
+        }
+    }
+
+    private void UpdateAttacking()
     {
         pathFindTimer -= Time.deltaTime;
         if (pathFindTimer <= 0)
@@ -66,7 +101,7 @@ public class EnemyAI : MonoBehaviour, IDamagable
         }
     }
 
-    public void UpdatePath()
+    private void UpdatePath()
     {
         if (navMeshAgent.remainingDistance < 1)
         {
@@ -85,7 +120,7 @@ public class EnemyAI : MonoBehaviour, IDamagable
         }
     }
 
-    public void SetPathState()
+    private void SetPathState()
     {
         state = AIState.Path;
         float d = 500000;

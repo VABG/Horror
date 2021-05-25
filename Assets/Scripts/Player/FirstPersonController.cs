@@ -19,7 +19,7 @@ public class FirstPersonController : MonoBehaviour
 
     Rigidbody rb;
     PlayerUI ui;
-    PlayerSounds sounds;
+    FootstepSounds sounds;
 
     [SerializeField] Flashlight flashlight;
 
@@ -45,7 +45,7 @@ public class FirstPersonController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         ui = GetComponent<PlayerUI>();
-        sounds = GetComponent<PlayerSounds>();
+        sounds = GetComponent<FootstepSounds>();
 
         // Lock mouse
         Cursor.lockState = CursorLockMode.Locked;
