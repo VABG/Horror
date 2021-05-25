@@ -11,23 +11,35 @@ public enum AIState
 
 public class EnemyAI : MonoBehaviour, IDamagable
 {
-    AIState state = AIState.Idle;
+
+    // Basic navmesh stuff
+    [SerializeField] Transform attackCenter;
     UnityEngine.AI.NavMeshAgent navMeshAgent;
     float pathFindTimer = .5f;
-    [SerializeField] GameObject head;
-    [SerializeField] GameObject target;
-    [SerializeField]float health = 30;
-
     [SerializeField] float pathFindUpdateTime = .5f;
-    [SerializeField]GameObject pathParent;
+    [SerializeField] GameObject target;
+
+    // Path
+    [SerializeField] GameObject pathParent;
+    Transform[] path;
+    int currentPathPoint = 0;
+
+    // AI Looking
+    [SerializeField] GameObject head;
     [SerializeField] LayerMask viewMask;
     [SerializeField] float viewAngle = 25;
     [SerializeField] float losePlayerTime = 3.0f;
-    [SerializeField] FootstepSounds sounds;
-    float sawLastTimer = 0;
+    float sawLastTimer = 3;
 
-    Transform[] path;
-    int currentPathPoint = 0;
+    // Other
+    AIState state = AIState.Idle;
+    [SerializeField] float health = 30;
+    [SerializeField] FootstepSounds sounds;
+    [SerializeField] AudioSource mouthAudio;
+    //Attacking
+    float attackTimer = 0;
+    [SerializeField] float attackDelay = 1;
+
     public void Damage(float damage, Vector3 position, Vector3 force)
     {
         health -= damage;
@@ -38,11 +50,13 @@ public class EnemyAI : MonoBehaviour, IDamagable
     void Start()
     {
         navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+
+        // Pathfinding stuff
         if (pathParent != null)
         {
             path = pathParent.GetComponentsInChildren<Transform>();
             SetPathState();
-        }        
+        }
     }
 
     // Update is called once per frame
@@ -50,8 +64,10 @@ public class EnemyAI : MonoBehaviour, IDamagable
     {
         UpdateLooking();
 
-        sounds.UpdateFootstep(navMeshAgent.velocity.magnitude / 10);
-        switch (state){
+        sounds.UpdateFootstep(navMeshAgent.velocity.magnitude);
+
+        switch (state)
+        {
             case AIState.Idle:                
                 break;
             case AIState.Attacking:
@@ -65,31 +81,54 @@ public class EnemyAI : MonoBehaviour, IDamagable
 
     private void UpdateLooking()
     {
-
+        // Timer
         sawLastTimer += Time.deltaTime;
-        Vector3 direction = target.transform.position - head.transform.position;
-        float angularDifference = Vector3.Angle(direction.normalized, head.transform.forward);
         if (sawLastTimer >= losePlayerTime && state == AIState.Attacking)
         {
             SetPathState();
         }
 
+        // Direction to target
+        Vector3 direction = target.transform.position - head.transform.position;
+
+        // Angle to target
+        float angularDifference = Vector3.Angle(direction.normalized, head.transform.forward);        
         if (angularDifference > viewAngle) return;
         
+        //Raycast
         if (Physics.Raycast(new Ray(head.transform.position, direction.normalized), out RaycastHit h, 20, viewMask))
         {
-            Debug.DrawRay(head.transform.position, direction.normalized * h.distance);
+            Debug.DrawLine(head.transform.position, h.point);
+
             FirstPersonController fp = h.transform.GetComponent<FirstPersonController>();
             if (fp != null)
             {
+                if (sawLastTimer >= losePlayerTime) mouthAudio.Play();
                 sawLastTimer = 0;
                 state = AIState.Attacking;
+                navMeshAgent.stoppingDistance = 1.0f;
             }
-        }
+        }        
     }
 
     private void UpdateAttacking()
-    {
+    {        
+        attackTimer -= Time.deltaTime;
+        if (attackTimer <= 0 && (target.transform.position - transform.position).magnitude < 1.5)
+        {
+            //Attack!
+            RaycastHit[] rhits = Physics.SphereCastAll(attackCenter.position, .5f, Vector3.up, viewMask);
+            for (int i = 0; i < rhits.Length; i++)
+            {
+                IDamagable dmg = rhits[i].transform.GetComponent<IDamagable>();
+                if (dmg != null && dmg != this)
+                {
+                    dmg.Damage(20.0f, Vector3.zero, transform.forward * 50);
+                }
+            }
+            attackTimer = attackDelay;
+        }
+
         pathFindTimer -= Time.deltaTime;
         if (pathFindTimer <= 0)
         {
@@ -97,6 +136,10 @@ public class EnemyAI : MonoBehaviour, IDamagable
             if (target != null)
             {
                 navMeshAgent.SetDestination(target.transform.position);
+            }
+            else
+            {
+                state = AIState.Path;
             }
         }
     }
@@ -108,7 +151,6 @@ public class EnemyAI : MonoBehaviour, IDamagable
             NextPathPoint();
             navMeshAgent.SetDestination(path[currentPathPoint].position);
         }
-        
     }
 
     private void NextPathPoint()
@@ -122,18 +164,22 @@ public class EnemyAI : MonoBehaviour, IDamagable
 
     private void SetPathState()
     {
+        navMeshAgent.stoppingDistance = .5f;
         state = AIState.Path;
         float d = 500000;
         int closest = 0;
+
         for (int i = 0; i < path.Length; i++)
         {
             float dist = (transform.position - path[i].position).magnitude;
+
             if (dist < d)
             {
                 closest = i;
                 d = dist;
             }
         }
+
         currentPathPoint = closest;
         navMeshAgent.SetDestination(path[currentPathPoint].position);
     }

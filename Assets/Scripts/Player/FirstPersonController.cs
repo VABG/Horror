@@ -7,7 +7,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerUI))]
-public class FirstPersonController : MonoBehaviour
+public class FirstPersonController : MonoBehaviour, IDamagable
 {
     [SerializeField] Camera cam;
     [SerializeField] float moveAccelerationMultiplier = 5;
@@ -59,7 +59,7 @@ public class FirstPersonController : MonoBehaviour
         {
             InputMouseView();
             InputWeapon();
-            sounds.UpdateFootstep(rb.velocity.magnitude / 10);
+            sounds.UpdateFootstep(rb.velocity.magnitude);
             if (!locked)
             {
                 InputKeyboardMovement();
@@ -234,6 +234,10 @@ public class FirstPersonController : MonoBehaviour
     public void SetActive(bool active)
     {
         this.active = active;
-    }    
+    }
 
+    public void Damage(float damage, Vector3 position, Vector3 force)
+    {
+        rb.AddForce(force * 20, ForceMode.Impulse);
+    }
 }
