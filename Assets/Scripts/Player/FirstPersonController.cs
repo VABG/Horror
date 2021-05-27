@@ -39,6 +39,8 @@ public class FirstPersonController : MonoBehaviour, IDamagable
 
     bool locked = false;
     bool active = false;
+    [SerializeField] float health = 100;
+    bool alive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -55,7 +57,7 @@ public class FirstPersonController : MonoBehaviour, IDamagable
     // Update is called once per frame
     void Update()
     {
-        if (active)
+        if (active && alive)
         {
             InputMouseView();
             InputWeapon();
@@ -223,12 +225,15 @@ public class FirstPersonController : MonoBehaviour, IDamagable
 
     private void FixedUpdate()
     {
-        UpdateCarriedObject();
+        if (alive)
+        {
+            UpdateCarriedObject();
 
-        // Update movement in fixed update for stability
-        float multiplier = sprinting ? sprintAccelerationMultiplier : moveAccelerationMultiplier;
-        rb.AddForce(forward * moveInput.z * multiplier, ForceMode.Acceleration);
-        rb.AddForce(cam.transform.right * moveInput.x * multiplier, ForceMode.Acceleration);
+            // Update movement in fixed update for stability
+            float multiplier = sprinting ? sprintAccelerationMultiplier : moveAccelerationMultiplier;
+            rb.AddForce(forward * moveInput.z * multiplier, ForceMode.Acceleration);
+            rb.AddForce(cam.transform.right * moveInput.x * multiplier, ForceMode.Acceleration);
+        }
     }
 
     public void SetActive(bool active)
@@ -236,8 +241,35 @@ public class FirstPersonController : MonoBehaviour, IDamagable
         this.active = active;
     }
 
+    public void Die()
+    {
+        ui.Die();
+        alive = false;
+        rb.freezeRotation = false;
+        rb.AddTorque(cam.transform.right * 1000);
+        rb.drag = 5f;
+        rb.angularDrag = .1f;
+        rb.sleepThreshold = .01f;
+
+        weaponHand.DropWeapon();
+        DropHeld();
+    }
+
     public void Damage(float damage, Vector3 position, Vector3 force)
     {
-        rb.AddForce(force * 20, ForceMode.Impulse);
+        if (alive)
+        {
+            health -= damage;
+            rb.AddForce(force * 20, ForceMode.Impulse);
+            if (health <= 0)
+            {
+                health = 0;
+                Die();
+            }
+            else
+            {
+                ui.GotHurt(.5f);
+            }
+        }
     }
 }

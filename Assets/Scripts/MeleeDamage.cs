@@ -64,12 +64,12 @@ public class MeleeDamage : MonoBehaviour
         if (dmg != null)
         {
             dmg.Damage(10*dmgMult, Vector3.zero, -transform.up * 60*dmgMult);
-            audioSource.PlayOneShot(audioHit, dmgMult);
+            audioSource.PlayOneShot(audioHit, dmgMult * .5f);
         }
         else
         {
             onHitEvent?.Invoke();
-            audioSource.PlayOneShot(audioHitFail, dmgMult);
+            audioSource.PlayOneShot(audioHitFail, dmgMult * .3f);
             return;
         }
 

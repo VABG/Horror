@@ -112,9 +112,11 @@ public class EnemyAI : MonoBehaviour, IDamagable
     }
 
     private void UpdateAttacking()
-    {        
+    {
+        navMeshAgent.updateRotation = true;
         attackTimer -= Time.deltaTime;
-        if (attackTimer <= 0 && (target.transform.position - transform.position).magnitude < 1.5)
+        float dist = (target.transform.position - transform.position).magnitude;
+        if (attackTimer <= 0 && dist < 1.5)
         {
             //Attack!
             RaycastHit[] rhits = Physics.SphereCastAll(attackCenter.position, .5f, Vector3.up, viewMask);
@@ -133,14 +135,27 @@ public class EnemyAI : MonoBehaviour, IDamagable
         if (pathFindTimer <= 0)
         {
             pathFindTimer = pathFindUpdateTime;
-            if (target != null)
+            if (target != null && sawLastTimer < .5f)
             {
                 navMeshAgent.SetDestination(target.transform.position);
             }
-            else
+            else if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
             {
                 state = AIState.Path;
             }
+        }
+
+        if (dist <= 1.5f)
+        {
+            navMeshAgent.updateRotation = false;
+            float angle = Vector3.SignedAngle(transform.forward, target.transform.position - transform.position, transform.up);
+            float rotation = angle * Time.deltaTime * 5;
+            if (rotation > angle) rotation = angle;
+            transform.Rotate(transform.up, rotation);
+        }
+        else if (dist > 2)
+        {
+            navMeshAgent.updateRotation = true;
         }
     }
 
