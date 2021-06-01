@@ -7,21 +7,20 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] UnityEngine.UI.Text textCenter;
     [SerializeField] UnityEngine.UI.Image fadeFromImage;
     [SerializeField] float textCenterFadeTime = .5f;
-    [SerializeField] UnityEngine.UI.Image bloodEffect;
-    [SerializeField] Color bloodEffectColor;
-    [SerializeField] Color bloodEffectFadeoutColor;
     float fadeFromBlackTime = 0;
     bool fadeFromBlack = false;
     bool fadeFromBlackActivatesPlayer = true;
     float fadeFromBlackTimer = 0;
     float fadeStartTime = 0;
 
+    [SerializeField] UnityEngine.UI.Image bloodEffect;
+    [SerializeField] Color bloodEffectColor;
+    [SerializeField] Color bloodEffectFadeoutColor;
     float hurtTimer = 0;
     float hurtTime = 0;
     bool gotHurt = false;
 
     float timeSinceTextCenterSet = 0;
-
     float time = 0;
     // Start is called before the first frame update
     void Start()
@@ -53,7 +52,8 @@ public class PlayerUI : MonoBehaviour
             bloodEffect.color = Color.Lerp(bloodEffectFadeoutColor, bloodEffectColor, hurtTimer / hurtTime);
             if (hurtTimer <= 0)
             {
-                bloodEffect.enabled = false;                
+                bloodEffect.enabled = false;
+                gotHurt = false;
             }
         }
     }

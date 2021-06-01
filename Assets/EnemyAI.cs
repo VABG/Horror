@@ -147,10 +147,19 @@ public class EnemyAI : MonoBehaviour, IDamagable
 
         if (dist <= 1.5f)
         {
+            // Make navmeshagent manually rotated
             navMeshAgent.updateRotation = false;
-            float angle = Vector3.SignedAngle(transform.forward, target.transform.position - transform.position, transform.up);
-            float rotation = angle * Time.deltaTime * 5;
-            if (rotation > angle) rotation = angle;
+            Vector3 dir = target.transform.position - transform.position;
+
+            // Need to remove Y axis or else Signed Angle doesn't work correctly.
+            dir = new Vector3(dir.x, 0, dir.z).normalized;
+            float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
+
+            // Smooth movement
+            float rotation = angle * Time.deltaTime * 3;
+
+            // Check if further than angle towards target.
+            if (Mathf.Abs(rotation) > Mathf.Abs(angle)) rotation = angle;
             transform.Rotate(transform.up, rotation);
         }
         else if (dist > 2)

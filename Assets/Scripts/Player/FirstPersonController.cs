@@ -260,15 +260,16 @@ public class FirstPersonController : MonoBehaviour, IDamagable
         if (alive)
         {
             health -= damage;
-            rb.AddForce(force * 20, ForceMode.Impulse);
             if (health <= 0)
             {
                 health = 0;
+                rb.AddForce(force * 50, ForceMode.Impulse);
                 Die();
             }
             else
             {
                 ui.GotHurt(.5f);
+                rb.AddForce(force * 20, ForceMode.Impulse);
             }
         }
     }

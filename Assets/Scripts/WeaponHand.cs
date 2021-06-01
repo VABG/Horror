@@ -45,8 +45,13 @@ public class WeaponHand : MonoBehaviour
 
     private void Update()
     {
-        if (isPoweringUp && windUpTimer < windUpTimeMax + windUpTimeMin) windUpTimer += Time.deltaTime * windUpTimeMult;
-        if (HasWeapon())transform.localRotation = Quaternion.Euler(localWeaponRotation + new Vector3(Random.value * windUpTimer, Random.value * windUpTimer, Random.value * windUpTimer)*90);
+        if (isPoweringUp && windUpTimer < windUpTimeMax + windUpTimeMin)
+        {
+            windUpTimer += Time.deltaTime * windUpTimeMult;
+            float normalizedTime = (windUpTimer - windUpTimeMin) / (windUpTimeMax - windUpTimeMin);
+            if (HasWeapon()) weapon.transform.localRotation =
+            Quaternion.Euler(new Vector3(Random.value * windUpTimer, Random.value * windUpTimer, Random.value * windUpTimer) * 3* normalizedTime);
+        }
 
         if (wantsToWindUp) StartAttack();
         if (wantsToAttack) Attack();

@@ -21,7 +21,7 @@ public class Door : MonoBehaviour, IInteractableBasic
     [SerializeField] float closedAngle = 0;
     [SerializeField] float openCloseTime = 1.0f;
     [SerializeField] bool canInterrupt = false;
-    bool locked = true;
+    [SerializeField]bool locked = true;
     float lerp = 0;
     bool moving = false;
     bool open = false;
