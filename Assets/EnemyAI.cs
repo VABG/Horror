@@ -6,10 +6,16 @@ public enum AIState
 {
     Idle,
     Path,
-    Attacking
+    Attacking,
+    GotoInterest,
 }
 
-public class EnemyAI : MonoBehaviour, IDamagable
+ interface IListener
+{
+    abstract void HearSound(float interest, Vector3 position);
+}
+
+public class EnemyAI : MonoBehaviour, IDamagable, IListener
 {
 
     // Basic navmesh stuff
@@ -33,17 +39,23 @@ public class EnemyAI : MonoBehaviour, IDamagable
 
     // Other
     AIState state = AIState.Idle;
-    [SerializeField] float health = 30;
     [SerializeField] FootstepSounds sounds;
     [SerializeField] AudioSource mouthAudio;
+
     //Attacking
     float attackTimer = 0;
     [SerializeField] float attackDelay = 1;
+    
+    //Stunned
+    bool stunned = false;
+    float stunnedTime = 0;
 
     public void Damage(float damage, Vector3 position, Vector3 force)
     {
-        health -= damage;
-        if (health <= 0) Die();
+        stunned = true;
+        stunnedTime = 2.0f;
+        navMeshAgent.ResetPath();
+        navMeshAgent.updateRotation = true;
     }
 
     // Start is called before the first frame update
@@ -63,6 +75,12 @@ public class EnemyAI : MonoBehaviour, IDamagable
     void Update()
     {
         UpdateLooking();
+        if (stunned)
+        {
+            stunnedTime -= Time.deltaTime;
+            if (stunnedTime <= 0) stunned = false;
+            else return;
+        }
 
         sounds.UpdateFootstep(navMeshAgent.velocity.magnitude);
 
@@ -76,6 +94,17 @@ public class EnemyAI : MonoBehaviour, IDamagable
             case AIState.Path:
                 UpdatePath();
                 break;
+            case AIState.GotoInterest:
+                UpdateGoto();
+                break;
+        }
+    }
+
+    private void UpdateGoto()
+    {
+        if (navMeshAgent.remainingDistance < .5f && navMeshAgent.pathStatus != UnityEngine.AI.NavMeshPathStatus.PathComplete)
+        {
+            state = AIState.Path;
         }
     }
 
@@ -211,5 +240,14 @@ public class EnemyAI : MonoBehaviour, IDamagable
     void Die()
     {
         Destroy(gameObject);
+    }
+
+    public void HearSound(float interest, Vector3 position)
+    {
+        if (state != AIState.Attacking)
+        {
+            state = AIState.GotoInterest;
+            navMeshAgent.SetDestination(position);
+        }
     }
 }

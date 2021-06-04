@@ -61,7 +61,7 @@ public class FirstPersonController : MonoBehaviour, IDamagable
         {
             InputMouseView();
             InputWeapon();
-            sounds.UpdateFootstep(rb.velocity.magnitude);
+            sounds.UpdateFootstep(rb.velocity.magnitude, sprinting);
             if (!locked)
             {
                 InputKeyboardMovement();
@@ -69,6 +69,13 @@ public class FirstPersonController : MonoBehaviour, IDamagable
             RayCastToScene();
             if (Input.GetKeyDown(KeyCode.F)) flashlight.InvertState();
         }
+    }
+    
+    void Drag()
+    {
+        Vector3 vel = rb.velocity;
+        vel -= vel * 10f * Time.fixedDeltaTime;
+        rb.velocity = new Vector3(vel.x, rb.velocity.y, vel.z);
     }
 
     void UpdateCarriedObject()
@@ -135,8 +142,8 @@ public class FirstPersonController : MonoBehaviour, IDamagable
 
     void InputKeyboardMovement()
     {
-        sprinting = false;
         // Reset Input
+        sprinting = false;
         moveInput = Vector3.zero;
         // Get Input
         if (Input.GetKey(KeyCode.W)) moveInput += Vector3.forward;
@@ -233,6 +240,7 @@ public class FirstPersonController : MonoBehaviour, IDamagable
             float multiplier = sprinting ? sprintAccelerationMultiplier : moveAccelerationMultiplier;
             rb.AddForce(forward * moveInput.z * multiplier, ForceMode.Acceleration);
             rb.AddForce(cam.transform.right * moveInput.x * multiplier, ForceMode.Acceleration);
+            Drag();
         }
     }
 
