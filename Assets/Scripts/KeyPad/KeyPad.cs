@@ -26,7 +26,7 @@ public class KeyPad : MonoBehaviour
     [SerializeField] GameObject progressObject;
 
     [SerializeField] UnityEvent correctCodeEvent;
-    [SerializeField] UnityEvent inactiveEvent;
+    [SerializeField] UnityEvent inactiveEvent;    
     public KeyPadStatus status;
     string currentInput = "";
 
@@ -41,6 +41,11 @@ public class KeyPad : MonoBehaviour
         SetProgress();
     }
 
+
+    public void SetCode(string setTo)
+    {
+        code = setTo;
+    }
     // Update is called once per frame
     void Update()
     {

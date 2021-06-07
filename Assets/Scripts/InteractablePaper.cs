@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InteractablePaper : MonoBehaviour, IInteractableBasic
 {
     ColorAndText IInteractableBasic.LookedAtInfo => new ColorAndText {color = Color.black, text = pickedUp ? "" : "Read"};
     bool pickedUp = false;
+    [SerializeField] Text text;
     Quaternion rotation;
     Vector3 position;
     PickupMode IInteractableBasic.GetPickupMode()
@@ -18,6 +20,11 @@ public class InteractablePaper : MonoBehaviour, IInteractableBasic
     {
         rotation = transform.rotation;
         position = transform.position;
+    }
+
+    public void SetText(string text)
+    {
+        this.text.text = text;
     }
 
     void IInteractableBasic.Trigger()
