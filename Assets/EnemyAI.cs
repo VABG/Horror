@@ -17,6 +17,7 @@ public enum AIState
 
 public class EnemyAI : MonoBehaviour, IDamagable, IListener
 {
+    [SerializeField] AiAnim anim;
 
     // Basic navmesh stuff
     [SerializeField] Transform attackCenter;
@@ -74,6 +75,11 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
     // Update is called once per frame
     void Update()
     {
+        if (target != null)
+        {
+            anim.lookAt = target;            
+        }
+
         UpdateLooking();
         if (stunned)
         {
@@ -148,6 +154,7 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
         if (attackTimer <= 0 && dist < 1.5)
         {
             //Attack!
+            anim.Attack();
             RaycastHit[] rhits = Physics.SphereCastAll(attackCenter.position, .5f, Vector3.up, viewMask);
             for (int i = 0; i < rhits.Length; i++)
             {
