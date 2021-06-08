@@ -8,7 +8,7 @@ public class Level : MonoBehaviour
     [SerializeField] float fadeToGameTime = 3.0f;
     [SerializeField] bool doIntro = false;
     [SerializeField] KeyPad[] setCodeTo;
-    [SerializeField] InteractablePaper paperWithCode;
+    [SerializeField] InteractablePaper[] paperWithCode;
     string doorCode;
 
     FirstPersonController player;
@@ -57,8 +57,15 @@ public class Level : MonoBehaviour
         for (int i = 0; i < setCodeTo.Length; i++)
         {
             setCodeTo[i].SetCode(doorCode);
-            paperWithCode.SetText("The door code is: " + doorCode);
+            paperWithCode[Random.Range(0, paperWithCode.Length)].SetText("The door code is: " + doorCode);
         }
+    }
+
+    public void EndLevel()
+    {
+        player.SetActive(false);
+        playerUI.EndGame();
+        Destroy(FindObjectOfType<EnemyAI>().gameObject);
     }
 
     // Update is called once per frame

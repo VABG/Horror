@@ -28,12 +28,12 @@ public class FootstepSounds : MonoBehaviour
         //if (smallMovement && footstepTimer > .2f) footstepTimer = .15f;
         if (footstepTimer <= 0)
         {
-            if (hasAIListener && running) AlertWithSound();
             source.pitch = pitchBase + Random.value * pitchRandom;
             int rnd = Random.Range(0, footsteps.Length);
             source.PlayOneShot(footsteps[rnd], running ? footstepVolume : footstepVolume/3);
             footstepTimer = footstepTime;
-        }       
+            if (hasAIListener && running) AlertWithSound();
+        }
     }
 
     private void AlertWithSound()

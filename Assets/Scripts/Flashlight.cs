@@ -5,6 +5,7 @@ using UnityEngine;
 public class Flashlight : MonoBehaviour
 {
     [SerializeField] Transform rayOrigin;
+    [SerializeField] LayerMask layerMask;
     Quaternion targetRotation = Quaternion.identity;
     [SerializeField] float rotationSpeedMultiplier = 5.0f;
     Light light;
@@ -19,7 +20,7 @@ public class Flashlight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Physics.Raycast(new Ray(rayOrigin.position, rayOrigin.forward), out RaycastHit rHit, 5))
+        if (Physics.Raycast(new Ray(rayOrigin.position, rayOrigin.forward), out RaycastHit rHit, 5, layerMask))
         {
             targetRotation.SetLookRotation((rHit.point - transform.position).normalized);
         }

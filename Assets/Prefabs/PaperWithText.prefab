@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6920304536923523084}
   - component: {fileID: 6920304536923523085}
   - component: {fileID: 6920304536923523086}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.02}
+  m_AnchoredPosition: {x: 0, y: 0.11}
   m_SizeDelta: {x: 320, y: 480}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6920304536923523084
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 6920304537301189446}
   - component: {fileID: 6920304537301189444}
   - component: {fileID: 6920304537301189445}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 6920304538488699932}
   - component: {fileID: 6920304538488699933}
   - component: {fileID: 6920304538488699934}
+  - component: {fileID: 1676714335}
   m_Layer: 0
   m_Name: PaperWithText
   m_TagString: Untagged
@@ -205,9 +206,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6920304538488699935}
-  m_LocalRotation: {x: -0, y: 0.13578688, z: -0, w: 0.9907381}
+  m_LocalRotation: {x: 0, y: 0.13578475, z: 0, w: 0.9907384}
   m_LocalPosition: {x: 2.01, y: 1.023, z: 0.445}
-  m_LocalScale: {x: 0.021, y: 0.021, z: 0.03}
+  m_LocalScale: {x: 0.021, y: 0.021, z: 0.029999996}
   m_Children:
   - {fileID: 6920304536923523087}
   m_Father: {fileID: 0}
@@ -274,6 +275,19 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1676714335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6920304538488699935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c53561ab21964e498457756209881cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 6920304537301189445}

@@ -20,7 +20,7 @@ public class PlayerUI : MonoBehaviour
     float hurtTime = 0;
     bool gotHurt = false;
 
-    float timeSinceTextCenterSet = 0;
+    float textCenterFadeTimer = 0;
     float time = 0;
     // Start is called before the first frame update
     void Start()
@@ -82,23 +82,32 @@ public class PlayerUI : MonoBehaviour
 
     public void StartFadeFromImage(float time, float timeToStart, bool unlockPlayer = true)
     {
+        fadeFromImage.enabled = true;
         fadeStartTime = timeToStart;
         fadeFromBlackTime = fadeFromBlackTimer = time;
         fadeFromBlack = true;
     }
 
+    public void EndGame()
+    {
+        fadeFromImage.enabled = true;
+        fadeFromImage.color = Color.black;
+        SetCenterText("Game Over", Color.white);
+        textCenterFadeTimer = 5.0f;
+    }
+
     private void FadeTextCenter()
     {
-        if (timeSinceTextCenterSet >= 0)
+        if (textCenterFadeTimer >= 0)
         {
-            timeSinceTextCenterSet -= Time.deltaTime;
-            float fadeAmount = timeSinceTextCenterSet / textCenterFadeTime;
+            textCenterFadeTimer -= Time.deltaTime;
+            float fadeAmount = textCenterFadeTimer / textCenterFadeTime;
             textCenter.color = new Color(textCenter.color.r, textCenter.color.g, textCenter.color.b, fadeAmount);
         }
     }
     public void SetCenterText(string text, Color color)
     {
-        timeSinceTextCenterSet = textCenterFadeTime;
+        textCenterFadeTimer = textCenterFadeTime;
         if (textCenter.text != text)
         {
             textCenter.text = text;

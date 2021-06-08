@@ -75,10 +75,7 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
     // Update is called once per frame
     void Update()
     {
-        if (target != null)
-        {
-            anim.lookAt = target;            
-        }
+
 
         UpdateLooking();
         if (stunned)
@@ -120,6 +117,7 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
         sawLastTimer += Time.deltaTime;
         if (sawLastTimer >= losePlayerTime && state == AIState.Attacking)
         {
+            anim.lookAt = null;
             SetPathState();
         }
 
@@ -140,6 +138,7 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
             {
                 if (sawLastTimer >= losePlayerTime) mouthAudio.Play();
                 sawLastTimer = 0;
+                anim.lookAt = target;
                 state = AIState.Attacking;
                 navMeshAgent.stoppingDistance = 1.0f;
             }
@@ -148,6 +147,7 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
 
     private void UpdateAttacking()
     {
+
         navMeshAgent.updateRotation = true;
         attackTimer -= Time.deltaTime;
         float dist = (target.transform.position - transform.position).magnitude;
@@ -178,6 +178,7 @@ public class EnemyAI : MonoBehaviour, IDamagable, IListener
             else if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
             {
                 state = AIState.Path;
+                anim.lookAt = null;
             }
         }
 
