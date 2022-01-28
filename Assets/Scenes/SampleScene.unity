@@ -4721,7 +4721,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &653260036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9801,8 +9801,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1509431680}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.422, y: 1.24, z: -0.84}
-  m_LocalScale: {x: 1.4603899, y: 2.2116055, z: 1.9043472}
+  m_LocalPosition: {x: -2.422, y: 1.144, z: -0.816}
+  m_LocalScale: {x: 1.4603899, y: 2.604608, z: 1.9043472}
   m_Children: []
   m_Father: {fileID: 1322491899}
   m_RootOrder: 3
@@ -9837,19 +9837,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1492367600}
         m_TargetAssemblyTypeName: Door, Assembly-CSharp
-        m_MethodName: DoorLock
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 1492367600}
-        m_TargetAssemblyTypeName: Door, Assembly-CSharp
-        m_MethodName: Trigger
+        m_MethodName: CloseAndLockDoor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9973,7 +9961,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 119
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1532363278
 Transform:
   m_ObjectHideFlags: 0
@@ -9982,7 +9970,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532363277}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.96, y: 2.5, z: -1.35}
+  m_LocalPosition: {x: -8.96, y: 2.47, z: -1.35}
   m_LocalScale: {x: 30, y: 0.16745031, z: 20}
   m_Children: []
   m_Father: {fileID: 1322491899}
@@ -15581,7 +15569,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &2138677392
 Light:
   m_ObjectHideFlags: 0

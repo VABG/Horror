@@ -24,7 +24,7 @@ public class AiAnim : MonoBehaviour
         if (lookAt)
         {
             headBone.LookAt(lookAt.transform.position);
-            Quaternion.Slerp(neckBone.transform.rotation, headBone.transform.rotation, .5f);
+            neckBone.transform.rotation = Quaternion.Slerp(neckBone.transform.rotation, headBone.transform.rotation, .5f);
             headBone.LookAt(lookAt.transform.position);
         }
     }

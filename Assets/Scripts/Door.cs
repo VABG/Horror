@@ -52,6 +52,15 @@ public class Door : MonoBehaviour, IInteractableBasic
         }
     }
 
+    public void CloseAndLockDoor()
+    {
+        open = false;
+        moving = true;
+        locked = true;
+        audioSource.PlayOneShot(audioLocked);
+        if (lerp > 0) audioSource.PlayOneShot(audioChange);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
